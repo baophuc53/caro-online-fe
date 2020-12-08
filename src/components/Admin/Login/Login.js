@@ -1,20 +1,20 @@
 import { Form, Input, Button, Checkbox } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import Axios from "axios";
-import config from "../../config/config.json";
+import config from "../../../config/config.json";
 import "./Login.scss";
 import { BrowserRouter as Router, Switch, Route, Link, Redirect } from "react-router-dom";
 
 const NormalLoginForm = () => {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("admin-token");
   const onFinish = (values) => {
     const { username, password } = values;
-    Axios.post(`${config.dev.path}/user`, { username, password })
+    Axios.post(`${config.dev.path}/admin`, { username, password })
       .then((res) => {
         console.log(res);
         if (res.data.code === 0) {
-          localStorage.setItem("token", res.data.data.token);
-          window.location.href = "/home";
+          localStorage.setItem("admin-token", res.data.data.token);
+          window.location.href = "/admin";
         } else alert("Login fail!");
       })
       .catch((err) => {
@@ -83,7 +83,7 @@ const NormalLoginForm = () => {
           </Form.Item>
         </Form>
       ) : (
-        <Redirect to="/home" />
+        <Redirect to="/admin" />
       )}
     </>
   );

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./Register.scss";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import config from "../../config/config.json";
 import {
   Form,
   Input,
@@ -14,6 +15,7 @@ import {
   AutoComplete,
 } from "antd";
 import { QuestionCircleOutlined } from "@ant-design/icons";
+import Axios from "axios";
 
 const formItemLayout = {
   labelCol: {
@@ -42,7 +44,18 @@ const RegistrationForm = () => {
   const [form] = Form.useForm();
 
   const onFinish = (values) => {
-    console.log("Received values of form: ", values);
+    const {username, password, nickname} = values;
+    Axios.put(`${config.dev.path}/user`, { username, password, nickname })
+      .then((res) => {
+        console.log(res);
+        if (res.data.code === 0) {
+          window.location.href = "/home";
+        } else alert("Register fail!");
+      })
+      .catch((err) => {
+        console.log(err);
+        alert(err.message);
+      });
   };
 
   return (
