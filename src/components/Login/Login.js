@@ -5,6 +5,7 @@ import config from "../../config/config.json";
 import "./Login.scss";
 import { BrowserRouter as Router, Switch, Route, Link, Redirect } from "react-router-dom";
 
+Axios.defaults.withCredentials = true;
 const NormalLoginForm = () => {
   const token = localStorage.getItem("token");
   const onFinish = (values) => {
