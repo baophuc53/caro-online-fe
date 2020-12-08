@@ -27,7 +27,6 @@ const NormalLoginForm = () => {
   return (
     <>
       {!token ? (
-        
         <Form
           name="normal_login"
           className="login-form"
