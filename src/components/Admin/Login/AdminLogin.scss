@@ -1,0 +1,18 @@
+.admin-login-form {
+  max-width: 400px;
+  margin: auto;
+  margin-top: 50px
+}
+ .login-form-forgot {
+  float: left;
+  color: red;
+}
+.login-form-register{
+  float: right;
+}
+.ant-col-rtl .login-form-forgot {
+  float: left;
+}
+ .login-form-button {
+  width: 100%;
+}

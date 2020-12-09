@@ -1,0 +1,16 @@
+.form-register {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    .register {
+        font-size: xx-large;
+        font-weight: 700;
+        letter-spacing: 5px;
+        color: #1890ff;
+        padding-left: 280px;
+    }
+    .register-form {
+        width: 550px;
+    }
+}
