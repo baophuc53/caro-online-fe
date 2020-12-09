@@ -2,7 +2,7 @@ import { Form, Input, Button, Checkbox } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import Axios from "axios";
 import config from "../../../config/config.json";
-import "./Login.scss";
+import "./AdminLogin.scss";
 import { BrowserRouter as Router, Switch, Route, Link, Redirect } from "react-router-dom";
 
 
@@ -29,7 +29,7 @@ const NormalLoginForm = () => {
       {!token ? (
         <Form
           name="normal_login"
-          className="login-form"
+          className="admin-login-form"
           initialValues={{
             remember: true,
           }}
