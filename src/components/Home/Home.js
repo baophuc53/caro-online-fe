@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import socketIOClient from "socket.io-client";
 import { Button } from "antd";
-const ENDPOINT = "http://localhost:8000";
+import Axios from "axios";
+import config from "../../config/config.json";
+const ENDPOINT = config.dev.path;
 
 function Home() {
   const [onlineUsers, setonlineUsers] = useState([]);
