@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import socketIOClient from "socket.io-client";
 import { Button } from "antd";
-import Axios from "axios";
-import config from "../../config/config.json";
 const ENDPOINT = "http://localhost:8000";
 
 function Home() {
@@ -11,15 +9,11 @@ function Home() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token != null) {
-      Axios.post(`${config.dev.path}`, { token })
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log(err);
-          alert(err.message);
-        });
       const socket = socketIOClient(ENDPOINT);
+      socket.on('connect', function() {
+        console.log('Connected to server');
+        socket.emit("token", token)
+      });
       socket.on("send-online-user-list", (data) => {
         console.log(data);
         setonlineUsers(data);
