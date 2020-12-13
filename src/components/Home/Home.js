@@ -114,7 +114,7 @@ function Home(props) {
       </Content>
 
       <Footer style={{ textAlign: "center" }}>
-        Ant Design ©2018 Created by Ant UED
+        Caro Online Game ©2020 Created by Best Team 412
       </Footer>
     </Layout>
   );

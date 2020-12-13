@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button } from "antd";
+import { Button, Row, Col, Table } from "antd";
 import Axios from "axios";
 
 function Room() {
@@ -21,10 +21,39 @@ function Room() {
     </Button>
   );
 
+  const columns = [
+    {
+      title: "Chat",
+      dataIndex: "nickname",
+      key: "id",
+      render: (text) => <a>{text}</a>,
+    },
+  ];
+  const data = [
+    {
+      id: 1,
+      nickname:'oke',
+    }
+  ]
+
   return (
-    <div className="App">
+    <div>
 
       {BacktoHome()}
+      <Row gutter={16}>
+      <Col className="gutter-row" span={18}>
+        <div>Bàn cờ</div>
+      </Col>
+      <Col className="gutter-row" span={6}>
+        <div> <Table
+              columns={columns}
+              dataSource={data}
+              pagination={false}
+              bordered
+            /></div>
+      </Col>
+     
+    </Row>
       
     </div>
   );
