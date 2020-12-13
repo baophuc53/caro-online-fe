@@ -1,23 +1,15 @@
 import React, { useState, useEffect } from "react";
-// import socketIOClient from "socket.io-client";
 import { Button } from "antd";
-// const ENDPOINT = "http://localhost:8000";
+import Axios from "axios";
 
 function Room() {
-//   const [onlineUsers, setonlineUsers] = useState([]);
+  const [player1, setPlayer1] = useState({});
+  
+  //load user
 
-//   useEffect(() => {
-//     const token = localStorage.getItem("token");
-//       const socket = socketIOClient(ENDPOINT);
-//       socket.on('connect', function() {
-//         console.log('Connected to server');
-//         socket.emit("token", token)
-//       });
-//       socket.on("send-online-user-list", (data) => {
-//         console.log(data);
-//         setonlineUsers(data);
-//       });
-//   }, []);
+  //load trạng thái bàn cờ
+
+  //load chat
 
   const BacktoHome = (props) => (
     <Button
@@ -29,26 +21,11 @@ function Room() {
     </Button>
   );
 
-  const NewRoom = (props) => (
-    <Button
-      // onClick={() => {
-      //   localStorage.clear();
-      //   window.location.href = "/login";
-      // }}
-    >
-      Tạo Phòng
-    </Button>
-  );
-
   return (
     <div className="App">
-      {BacktoHome()}
 
-      {NewRoom()}
+      {BacktoHome()}
       
-      {/* {onlineUsers.map((OLUser) => (
-        <div key={OLUser.id}>{OLUser.nickname}</div>
-      ))} */}
     </div>
   );
 }

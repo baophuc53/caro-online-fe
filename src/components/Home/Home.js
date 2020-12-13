@@ -1,26 +1,11 @@
 import React, { useState, useEffect } from "react";
-import socketIOClient from "socket.io-client";
-import { Modal, Button, Input } from "antd";
-import Draggable from "react-draggable";
-import NewRoomDialog from "./AddNewRoom";
-import Axios from "axios";
-import config from "../../config/config.json";
-const ENDPOINT = config.dev.path;
+import {Button} from "antd";
+import NewRoomDialog from "./CreateRoom";
+import JoinRoomDialog from "./JoinRoom";
 
-function Home() {
-  const [onlineUsers, setonlineUsers] = useState([]);
+function Home(props) {
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const socket = socketIOClient(ENDPOINT);
-      socket.emit("token", token);
-    socket.on("send-online-user-list", (data) => {
-      console.log(data);
-      setonlineUsers(data);
-    });
-  }, []);
-
-  const Signout = (props) => (
+  const Signout = () => (
     <Button
       onClick={() => {
         localStorage.clear();
@@ -37,9 +22,11 @@ function Home() {
 
       {NewRoomDialog()}
 
-      {onlineUsers.map((OLUser) => (
-        <div key={OLUser.id}>{OLUser.nickname}</div>
-      ))}
+      {JoinRoomDialog()}
+
+      {props.ListonlineUser.map((OLUser) => (
+          <div key={OLUser.id}>{OLUser.nickname}</div>
+        ))}
     </div>
   );
 }
