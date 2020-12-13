@@ -34,6 +34,7 @@ const NormalLoginForm = () => {
             remember: true,
           }}
           onFinish={onFinish}
+          layout ="vertical"
         >
           <Form.Item
             name="username"
