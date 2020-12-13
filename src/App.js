@@ -14,6 +14,7 @@ import RegistrationForm from "./components/Register/Register";
 import UserRoute from "./components/Router/UserRoute/UserRoute";
 import AdminRoute from "./components/Router/AdminRoute/AdminRoute";
 import Home from "./components/Home/Home";
+import Room from "./components/Room/Room";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/login" component={LoginScreen} />
           <Route path="/register" component={RegistrationForm} />
           <UserRoute path="/home" component={Home} />
+          <UserRoute path="/room" component={Room} />
 
           <Route path="/admin-login" component={AdminLoginScreen} />
           <AdminRoute path="/admin" component={Home} />
