@@ -8,7 +8,7 @@ import {
   SettingOutlined,
 } from "@ant-design/icons";
 import config from "../../config/config.json";
-import NewRoomDialog from "./AddNewRoom";
+import NewRoomDialog from "./CreateRoom";
 import JoinRoomDialog from "./JoinRoom";
 
 const { Header, Footer, Sider, Content } = Layout;
