@@ -1,5 +1,6 @@
-.ant-layout{
+.layout-home {
     height: 100vh;
-    background-color: white;
-  
+    .ant-layout-content {
+        background-color: white;
+    }
 }
