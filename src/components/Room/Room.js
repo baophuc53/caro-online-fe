@@ -1,23 +1,24 @@
 import React, { useState, useEffect } from "react";
-// import socketIOClient from "socket.io-client";
-import { Button } from "antd";
-// const ENDPOINT = "http://localhost:8000";
+import { Button, Row, Col, Table, Input, Layout } from "antd";
+import Axios from "axios";
+import Header from "../Header/Header";
+import Footer from "../Footer/Footer";
+import { Widget, addResponseMessage, addLinkSnippet, addUserMessage } from 'react-chat-widget';
+import { Socket } from "../Socket/Socket";
+import avatar from "../../assets/avatar.jpg";
+import 'react-chat-widget/lib/styles.css';
+import './Room.scss';
+
+const { Sider, Content } = Layout;
 
 function Room() {
-//   const [onlineUsers, setonlineUsers] = useState([]);
+  const [player1, setPlayer1] = useState({});
 
-//   useEffect(() => {
-//     const token = localStorage.getItem("token");
-//       const socket = socketIOClient(ENDPOINT);
-//       socket.on('connect', function() {
-//         console.log('Connected to server');
-//         socket.emit("token", token)
-//       });
-//       socket.on("send-online-user-list", (data) => {
-//         console.log(data);
-//         setonlineUsers(data);
-//       });
-//   }, []);
+  //load user
+
+  //load trạng thái bàn cờ
+
+  //load chat
 
   const BacktoHome = (props) => (
     <Button
@@ -29,26 +30,55 @@ function Room() {
     </Button>
   );
 
-  const NewRoom = (props) => (
-    <Button
-      // onClick={() => {
-      //   localStorage.clear();
-      //   window.location.href = "/login";
-      // }}
-    >
-      Tạo Phòng
-    </Button>
-  );
+  const columns = [
+    {
+      title: "Chat",
+      dataIndex: "nickname",
+      key: "id",
+      render: (text) => <a>{text}</a>,
+    },
+  ];
 
+  useEffect(() => {
+
+    Socket.on("chat-message", (data) => {
+      addResponseMessage(data);
+    });
+  }, []);
+
+  const handleNewUserMessage = (newMessage) => {
+    console.log(`New message incomig! ${newMessage}`);
+    Socket.emit("send-chat-message", newMessage);
+    // addResponseMessage("hello!");
+    // Now send the message throught the backend API
+  }
   return (
-    <div className="App">
-      {BacktoHome()}
+    <div>
 
-      {NewRoom()}
-      
-      {/* {onlineUsers.map((OLUser) => (
-        <div key={OLUser.id}>{OLUser.nickname}</div>
-      ))} */}
+
+      <Layout className="layout-home">
+        <Header />
+        <Content style={{ padding: "0 50px" }}>
+          <BacktoHome/>
+          <Layout
+            className="site-layout-background"
+            style={{ margin: "24px 0" }}
+          >
+            <Content style={{ padding: "0 24px", minHeight: 280 }}>
+              Game
+            </Content>
+
+          </Layout>
+        </Content>
+        <Footer />
+        <Widget
+          handleNewUserMessage={handleNewUserMessage}
+          senderPlaceHolder="Type a message"
+          profileAvatar={avatar}
+          title="Chat with player"
+          subtitle=""
+        />
+      </Layout>
     </div>
   );
 }

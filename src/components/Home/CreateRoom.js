@@ -7,14 +7,14 @@ import config from "../../config/config.json";
 function NewRoomDialog() {
   const [statusform, setStatusForm] = useState({
     visible: false,
-    disabled: true
+    disabled: true,
   });
   const [roomName, setRoomName] = useState("");
 
   const show_NewRoomDialog = () => {
     setStatusForm({
       // ...statusform,
-      visible: true
+      visible: true,
     });
   };
 
@@ -24,7 +24,7 @@ function NewRoomDialog() {
     handle_AddNewRoom();
     setStatusForm({
       // ...statusform,
-      visible: false
+      visible: false,
     });
   };
 
@@ -33,36 +33,47 @@ function NewRoomDialog() {
     //Không làm gì cả
     setStatusForm({
       // ...statusform,
-      visible: false
+      visible: false,
     });
   };
 
   const handle_AddNewRoom = () => {
     const token = localStorage.getItem("token");
-    Axios
-      .put(`${config.dev.path}/room/new-room`, { name_room: roomName }, {headers: {
-        token: token
-      }})
+    Axios.post(
+      `${config.dev.path}/room/new-room`,
+      { name_room: roomName },
+      {
+        headers: {
+          token: token,
+        },
+      }
+    )
       .then((result) => {
         console.log(result);
         if (result.data.code === 0) {
           alert("Mã tham gia phòng là: " + result.data.data.join_code);
-          window.location.href = "/room";
+          Axios.post(
+            `${config.dev.path}/room/join-room`,
+            { room_id: result.data.data.id },
+            {
+              headers: {
+                token: token,
+              },
+            }
+          ).then((_result) => {
+            if (_result.data.code === 0) {
+              window.location.href = "/room";
+            }
+          }).catch((_error) => {
+            alert(_error.message);
+          });
         }
-
-        // const temp = {
-        //   boardID: result.data.result.id,
-        //   boardName: boardName,
-        //   owner: owner,
-        //   timeCreate: timeCreate.format("YYYY-MM-DDTHH:mm:ss"),
-        //   timeUpdate: null,
-        // };
-        // setBoard([...boards, temp]);
       })
       .catch((error) => {
         console.log(error); // Xử lý lỗi
+        alert(error.message);
       });
-  }
+  };
 
   return (
     <>
@@ -78,14 +89,14 @@ function NewRoomDialog() {
               if (statusform.disabled) {
                 setStatusForm({
                   // ...statusform,
-                  disabled: false
+                  disabled: false,
                 });
               }
             }}
             onMouseOut={() => {
               setStatusForm({
-                // ...statusform,  
-                visible: true
+                // ...statusform,
+                visible: true,
               });
             }}
             onFocus={() => {}}
@@ -103,7 +114,11 @@ function NewRoomDialog() {
         )}
       >
         <p>Tên phòng:</p>
-        <Input placeholder="Vui lòng nhập tên phòng" allowClear onChange={(e) => setRoomName(e.target.value)}/>
+        <Input
+          placeholder="Vui lòng nhập tên phòng"
+          allowClear
+          onChange={(e) => setRoomName(e.target.value)}
+        />
       </Modal>
     </>
   );
