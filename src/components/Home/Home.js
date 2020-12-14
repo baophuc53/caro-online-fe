@@ -88,7 +88,7 @@ function Home(props) {
       <Content style={{ padding: "0 50px" }}>
         <Layout
           className="site-layout-background"
-          style={{ padding: "24px 0" }}
+          style={{ margin: "24px 0" }}
         >
           <Sider className="site-layout-background" width={200} theme="light">
             <Table
