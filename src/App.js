@@ -1,4 +1,4 @@
-import "./App.scss";
+import './App.scss';
 import React from "react";
 import "antd/dist/antd.css";
 import LoginScreen from "./pages/LoginScreen/LoginScreen";

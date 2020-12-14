@@ -97,7 +97,7 @@ function Home() {
       //   ))}</Footer>
       // </Layout>
       
-      <Layout>
+      <Layout className="layout-home">
       <Header className="header">
         <div className="logo" />
         <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
@@ -108,7 +108,7 @@ function Home() {
         </Menu>
       </Header>
       <Content style={{ padding: '0 50px' }}>
-        <Layout className="site-layout-background" style={{ padding: '24px 0' }}>
+        <Layout className="site-layout-background" style={{ margin: '24px 0' }}>
           <Sider className="site-layout-background" width={200} theme='light'>
           <Table columns={columns} dataSource={onlineUsers} pagination={false} bordered/>
           </Sider>
