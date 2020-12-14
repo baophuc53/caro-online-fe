@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import socketIOClient from "socket.io-client";
 import { Button, Layout, Table, Menu } from "antd";
 import "./Home.scss";
 import {
@@ -10,8 +9,10 @@ import {
 import config from "../../config/config.json";
 import NewRoomDialog from "./CreateRoom";
 import JoinRoomDialog from "./JoinRoom";
+import Header from "../Header/Header";
+import Footer from "../Footer/Footer";
 
-const { Header, Footer, Sider, Content } = Layout;
+const { Sider, Content } = Layout;
 const { SubMenu } = Menu;
 const ENDPOINT = config.dev.path;
 
@@ -82,15 +83,8 @@ function Home(props) {
     // </Layout>
 
     <Layout>
-      <Header className="header">
-        <div className="logo" />
-        <Menu theme="dark" mode="horizontal" defaultSelectedKeys={["2"]}>
-          <Menu.Item key="1">nav 1</Menu.Item>
-          <Menu.Item key="2">nav 2</Menu.Item>
-          <Menu.Item key="3">nav 3</Menu.Item>
-          <Menu.Item key="4">{Signout()}</Menu.Item>
-        </Menu>
-      </Header>
+      <Header/>
+
       <Content style={{ padding: "0 50px" }}>
         <Layout
           className="site-layout-background"
@@ -113,9 +107,7 @@ function Home(props) {
         </Layout>
       </Content>
 
-      <Footer style={{ textAlign: "center" }}>
-        Ant Design ©2018 Created by Ant UED
-      </Footer>
+      <Footer />
     </Layout>
   );
 }
