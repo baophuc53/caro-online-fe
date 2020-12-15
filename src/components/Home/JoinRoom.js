@@ -43,6 +43,7 @@ function JoinRoomDialog() {
       .then((result) => {
         console.log(result);
         if (result.data.code === 0) {
+          localStorage.setItem("room", result.data.data.room_id);
           Axios.post(
             `${config.dev.path}/room/join-room`,
             { room_id: result.data.data.room_id },

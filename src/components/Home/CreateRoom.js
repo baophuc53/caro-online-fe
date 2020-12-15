@@ -51,6 +51,7 @@ function NewRoomDialog() {
       .then((result) => {
         console.log(result);
         if (result.data.code === 0) {
+          localStorage.setItem("room", result.data.data.id);
           alert("Mã tham gia phòng là: " + result.data.data.join_code);
           Axios.post(
             `${config.dev.path}/room/join-room`,
