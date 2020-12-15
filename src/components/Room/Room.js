@@ -135,6 +135,7 @@ function Room() {
           title="Chat with player"
           subtitle=""
         />
+         <Footer />
       </Layout>
     </div>
   );
