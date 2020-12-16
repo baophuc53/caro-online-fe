@@ -41,9 +41,6 @@ function App() {
           <Route path="/register" component={RegistrationForm} />
           <UserRoute path="/home"> <Home ListonlineUser={onlineUsers}/> </UserRoute>
           <UserRoute path="/room" component={Room} />
-
-          <Route path="/admin-login" component={AdminLoginScreen} />
-          <AdminRoute path="/admin" component={Home} />
           <Redirect from="/" to="/home" />
         </Switch>
 
