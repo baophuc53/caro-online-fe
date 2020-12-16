@@ -76,6 +76,7 @@ function Room() {
 
   useEffect(() => {
     //get data of game board
+
     Axios.get(`${config.dev.path}/room/play`, { params: { room_id: room } })
       .then((response) => {
         if (response.data.data)
@@ -109,7 +110,6 @@ function Room() {
     Socket.on("chat-message", (data) => {
       addResponseMessage(data);
     });
-
     //get game board again when in turn
     Socket.on("get-turn", (message) => {
       Axios.get(`${config.dev.path}/room/play`, { params: { room_id: room } })
@@ -123,13 +123,14 @@ function Room() {
       setTurn(true);
     });
   }, []);
-
   const handleNewUserMessage = (newMessage) => {
     console.log(`New message incomig! ${newMessage}`);
-    Socket.emit("send-chat-message", newMessage);
+    Socket.emit("room", room);
+    Socket.emit("send-chat-message", (newMessage));
     // addResponseMessage("hello!");
     // Now send the message throught the backend API
   };
+
   return (
     <div>
       <Layout className="layout-home">
@@ -156,6 +157,7 @@ function Room() {
           title="Chat with player"
           subtitle=""
         />
+         <Footer />
       </Layout>
     </div>
   );
