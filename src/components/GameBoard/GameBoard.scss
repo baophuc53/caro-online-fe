@@ -1,0 +1,19 @@
+.square {
+    background: #fff;
+    border: 1px solid #999;
+    float: left;
+    font-size: 15px;
+    font-weight: bold;
+    line-height: 25px;
+    height: 25px;
+    margin-right: -1px;
+    margin-top: -1px;
+    padding: 0;
+    text-align: center;
+    width: 25px;
+  }
+
+.board {
+  display: flex;
+  flex-direction: column;
+}

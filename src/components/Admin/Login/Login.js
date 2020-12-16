@@ -30,6 +30,7 @@ const NormalLoginForm = () => {
         <Form
           name="normal_login"
           className="admin-login-form"
+          layout ="vertical"
           initialValues={{
             remember: true,
           }}
