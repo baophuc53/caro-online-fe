@@ -1,29 +1,26 @@
+  
 import React, { useState, useEffect } from "react";
-import socketIOClient from "socket.io-client";
-import { Button } from "antd";
-import Axios from "axios";
+import { Button, Layout, Table, Menu } from "antd";
+import "./Home.scss";
+import {
+  MailOutlined,
+  AppstoreOutlined,
+  SettingOutlined,
+} from "@ant-design/icons";
 import config from "../../config/config.json";
+import NewRoomDialog from "./CreateRoom";
+import JoinRoomDialog from "./JoinRoom";
+import Header from "../Header/Header";
+import Footer from "../Footer/Footer";
+
+const { Sider, Content } = Layout;
+const { SubMenu } = Menu;
 const ENDPOINT = config.dev.path;
 
-function Home() {
-  const [onlineUsers, setonlineUsers] = useState([]);
+function Home(props) {
+  const [current, setCurrent] = useState("mail");
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token != null) {
-      const socket = socketIOClient(ENDPOINT);
-      socket.on('connect', function() {
-        console.log('Connected to server');
-        socket.emit("token", token)
-      });
-      socket.on("send-online-user-list", (data) => {
-        console.log(data);
-        setonlineUsers(data);
-      });
-    }
-  }, []);
-
-  const Signout = (props) => (
+  const Signout = () => (
     <Button
       onClick={() => {
         localStorage.clear();
