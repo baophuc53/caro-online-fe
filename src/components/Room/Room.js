@@ -22,31 +22,32 @@ function Room() {
   const [player1, setPlayer1] = useState({});
   const [squares, setSquares] = useState(Array(900).fill(null));
   const [turn, setTurn] = useState(true);
+  const [mark, setMark] = useState("X");
   const token = localStorage.getItem("token");
   const room = localStorage.getItem("room");
   const handleClick = (i) => {
-    if (!turn)
-      return;
+    if (!turn) return;
     let s = squares.slice();
-    s[i] = "X";
+    s[i] = mark;
     setSquares(s);
     Axios.post(
       `${config.dev.path}/room/play`,
-      { room_id: room, 
-        data: {square: s}},
+      { room_id: room, data: { square: s } },
       {
         headers: {
           token: token,
         },
       }
-    ).then((_result) => {
-      if (_result.data.code === 0) {
-        Socket.emit("swap-turn", room);
-        setTurn(false);
-      }
-    }).catch((_error) => {
-      alert(_error.message);
-    });
+    )
+      .then((_result) => {
+        if (_result.data.code === 0) {
+          Socket.emit("swap-turn", room);
+          setTurn(false);
+        }
+      })
+      .catch((_error) => {
+        alert(_error.message);
+      });
   };
   //load user
 
@@ -77,11 +78,33 @@ function Room() {
     //get data of game board
     Axios.get(`${config.dev.path}/room/play`, { params: { room_id: room } })
       .then((response) => {
-        console.log(response.data.data);
-        setSquares(response.data.data.square);
-      }).catch((err) => {
-        alert(err);
+        if (response.data.data)
+          setSquares(response.data.data.square);
       })
+      .catch((err) => {});
+
+    //check turn
+    Axios.post(
+      `${config.dev.path}/room/turn`,
+      { room_id: room },
+      {
+        headers: {
+          token: token,
+        },
+      }
+    )
+      .then((_result) => {
+        if (!_result.data.goFirst)
+          setMark("O");
+        if (_result.data.code === 0) {
+          setTurn(true);
+        } else{
+          setTurn(false);
+        }
+      })
+      .catch((_error) => {
+        alert(_error.message);
+      });
 
     Socket.on("chat-message", (data) => {
       addResponseMessage(data);
@@ -90,14 +113,15 @@ function Room() {
     //get game board again when in turn
     Socket.on("get-turn", (message) => {
       Axios.get(`${config.dev.path}/room/play`, { params: { room_id: room } })
-      .then((response) => {
-        console.log(response.data.data);
-        setSquares(response.data.data.square);
-      }).catch((err) => {
-        alert(err);
-      })
+        .then((response) => {
+          console.log(response.data.data);
+          setSquares(response.data.data.square);
+        })
+        .catch((err) => {
+          alert(err);
+        });
       setTurn(true);
-    })
+    });
   }, []);
 
   const handleNewUserMessage = (newMessage) => {
