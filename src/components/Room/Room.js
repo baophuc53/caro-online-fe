@@ -82,7 +82,7 @@ function Room() {
         if (response.data.data)
           setSquares(response.data.data.square);
       })
-      .catch((err) => {});
+      .catch((err) => { });
 
     //check turn
     Axios.post(
@@ -99,17 +99,20 @@ function Room() {
           setMark("O");
         if (_result.data.code === 0) {
           setTurn(true);
-        } else{
+        } else {
           setTurn(false);
         }
       })
       .catch((_error) => {
         alert(_error.message);
       });
-
+    // Socket.on("default-message", (data) => {
+    //   addResponseMessage(data);
+    // });
     Socket.on("chat-message", (data) => {
       addResponseMessage(data);
     });
+    Socket.emit("room", room);
     //get game board again when in turn
     Socket.on("get-turn", (message) => {
       Axios.get(`${config.dev.path}/room/play`, { params: { room_id: room } })
@@ -157,7 +160,7 @@ function Room() {
           title="Chat with player"
           subtitle=""
         />
-         <Footer />
+        <Footer />
       </Layout>
     </div>
   );
