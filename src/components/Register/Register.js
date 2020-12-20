@@ -49,7 +49,7 @@ const RegistrationForm = () => {
       .then((res) => {
         console.log(res);
         if (res.data.code === 0) {
-          window.location.href = "/home";
+          window.location.href = "/login";
         } else alert(res.data.data.message);
       })
       .catch((err) => {
