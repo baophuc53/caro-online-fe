@@ -50,7 +50,7 @@ const RegistrationForm = () => {
         console.log(res);
         if (res.data.code === 0) {
           window.location.href = "/home";
-        } else alert("Register fail!");
+        } else alert(res.data.data.message);
       })
       .catch((err) => {
         console.log(err);
