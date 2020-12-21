@@ -27,30 +27,32 @@ function Room() {
   const handleClick = (i) => {
     if (!turn) return;
     let s = squares.slice();
-    s[i] = mark;
-    setSquares(s);
-    Axios.post(
-      `${config.dev.path}/room/play`,
-      { room_id: room, data: { square: s, move: i} },
-      {
-        headers: {
-          Authorization: `token ${token}`,
-        },
-      }
-    )
-      .then((_result) => {
-        if (_result.data.code === 0) {
-          Socket.emit("swap-turn", room);
-          setTurn(false);
-        } else if (_result.data.code === 1) {
-          alert("You win!")
-          Socket.emit("end-game");
-          setTurn(false);
+    if (s[i] === null) {
+      s[i] = mark;
+      setSquares(s);
+      Axios.post(
+        `${config.dev.path}/room/play`,
+        { room_id: room, data: { square: s, move: i } },
+        {
+          headers: {
+            Authorization: `token ${token}`,
+          },
         }
-      })
-      .catch((_error) => {
-        alert(_error.message);
-      });
+      )
+        .then((_result) => {
+          if (_result.data.code === 0) {
+            Socket.emit("swap-turn", room);
+            setTurn(false);
+          } else if (_result.data.code === 1) {
+            alert("You win!");
+            Socket.emit("end-game");
+            setTurn(false);
+          }
+        })
+        .catch((_error) => {
+          alert(_error.message);
+        });
+    }
   };
   //load user
 
@@ -78,8 +80,8 @@ function Room() {
   ];
 
   useEffect(() => {
+    Socket.emit("room", room);
     //get data of game board
-
     Axios.get(`${config.dev.path}/room/play`, { params: { room_id: room } })
       .then((response) => {
         if (response.data.data) setSquares(response.data.data.square);
@@ -113,18 +115,19 @@ function Room() {
     Socket.on("chat-message", (data) => {
       addResponseMessage(data);
     });
-    Socket.emit("room", room);
     //get game board again when in turn
     Socket.on("get-turn", (message) => {
-      Axios.get(`${config.dev.path}/room/play`, { params: { room_id: room } })
-        .then((response) => {
-          console.log(response.data.data);
-          setSquares(response.data.data.square);
-        })
-        .catch((err) => {
-          alert(err);
-        });
-      setTurn(true);
+      if (message === "continue") {
+        Axios.get(`${config.dev.path}/room/play`, { params: { room_id: room } })
+          .then((response) => {
+            console.log(response.data.data);
+            setSquares(response.data.data.square);
+          })
+          .catch((err) => {
+            alert(err);
+          });
+        setTurn(true);
+      }
     });
   }, []);
   const handleNewUserMessage = (newMessage) => {
