@@ -11,7 +11,7 @@ import {
   Redirect,
 } from "react-router-dom";
 import RegistrationForm from "./components/Register/Register";
-import UserRoute from "./components/Router/UserRoute/UserRoute";
+import UserRoute from "./components/Router/UserRoute";
 import AdminRoute from "./components/Router/AdminRoute/AdminRoute";
 import Home from "./components/Home/Home";
 import Room from "./components/Room/Room";
@@ -39,7 +39,7 @@ function App() {
           <UserRoute path="/users" />
           <Route path="/login" component={LoginScreen} />
           <Route path="/register" component={RegistrationForm} />
-          <UserRoute path="/home"> <Home ListonlineUser={onlineUsers}/> </UserRoute>
+          <UserRoute path="/home" component={()=> <Home ListonlineUser={onlineUsers}/>}/>
           <UserRoute path="/room" component={Room} />
 
           <Route path="/admin-login" component={AdminLoginScreen} />

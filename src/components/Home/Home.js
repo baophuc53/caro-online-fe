@@ -17,8 +17,7 @@ const { SubMenu } = Menu;
 const ENDPOINT = config.dev.path;
 
 function Home(props) {
-  const [current, setCurrent] = useState("mail");
-
+  
   const Signout = () => (
     <Button
       onClick={() => {
@@ -39,12 +38,12 @@ function Home(props) {
     {
       title: "User Online",
       dataIndex: "nickname",
-      key: "id",
+      key: "nickname",
       render: (text) => <a>{text}</a>,
     },
   ];
   const data = props.ListonlineUser;
-  data.forEach(data => data.key=data.id);
+  data.forEach(data => data.key=data.nickname);
   return (
     
 
