@@ -2,7 +2,6 @@ import "./App.scss";
 import React, { useState, useEffect } from "react";
 import "antd/dist/antd.css";
 import LoginScreen from "./pages/LoginScreen/LoginScreen";
-import AdminLoginScreen from "./pages/Admin/LoginScreen/LoginScreen";
 import {
   BrowserRouter as Router,
   Switch,
@@ -12,7 +11,6 @@ import {
 } from "react-router-dom";
 import RegistrationForm from "./components/Register/Register";
 import UserRoute from "./components/Router/UserRoute";
-import AdminRoute from "./components/Router/AdminRoute/AdminRoute";
 import Home from "./components/Home/Home";
 import Room from "./components/Room/Room";
 import {Socket} from "./components/Socket/Socket";
@@ -41,9 +39,6 @@ function App() {
           <Route path="/register" component={RegistrationForm} />
           <UserRoute path="/home" component={()=> <Home ListonlineUser={onlineUsers}/>}/>
           <UserRoute path="/room" component={Room} />
-
-          <Route path="/admin-login" component={AdminLoginScreen} />
-          <AdminRoute path="/admin" component={Home} />
           <Redirect from="/" to="/home" />
         </Switch>
 
