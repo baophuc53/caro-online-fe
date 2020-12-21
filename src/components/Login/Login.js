@@ -16,7 +16,7 @@ const NormalLoginForm = () => {
         if (res.data.code === 0) {
           localStorage.setItem("token", res.data.data.token);
           window.location.href = "/home";
-        } else alert("Login fail!");
+        } else alert(res.data.message);
       })
       .catch((err) => {
         console.log(err);

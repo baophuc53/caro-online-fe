@@ -44,7 +44,7 @@ function NewRoomDialog() {
       { name_room: roomName },
       {
         headers: {
-          token: token,
+          Authorization: `token ${token}`,
         },
       }
     )
@@ -58,16 +58,21 @@ function NewRoomDialog() {
             { room_id: result.data.data.id },
             {
               headers: {
-                token: token,
+                Authorization: `token ${token}`,
               },
             }
-          ).then((_result) => {
-            if (_result.data.code === 0) {
-              window.location.href = "/room";
-            }
-          }).catch((_error) => {
-            alert(_error.message);
-          });
+          )
+            .then((_result) => {
+              if (_result.data.code === 0) {
+                window.location.href = "/room";
+              }
+            })
+            .catch((_error) => {
+              alert(_error.message);
+            });
+        }
+        else {
+          alert(result.data.data.message);
         }
       })
       .catch((error) => {

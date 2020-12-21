@@ -43,7 +43,8 @@ function Home(props) {
       render: (text) => <a>{text}</a>,
     },
   ];
-
+  const data = props.ListonlineUser;
+  data.forEach(data => data.key=data.id);
   return (
     
 

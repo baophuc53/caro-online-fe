@@ -34,7 +34,7 @@ function Room() {
       { room_id: room, data: { square: s, move: i} },
       {
         headers: {
-          token: token,
+          Authorization: `token ${token}`,
         },
       }
     )
@@ -82,10 +82,9 @@ function Room() {
 
     Axios.get(`${config.dev.path}/room/play`, { params: { room_id: room } })
       .then((response) => {
-        if (response.data.data)
-          setSquares(response.data.data.square);
+        if (response.data.data) setSquares(response.data.data.square);
       })
-      .catch((err) => { });
+      .catch((err) => {});
 
     //check turn
     Axios.post(
@@ -93,13 +92,12 @@ function Room() {
       { room_id: room },
       {
         headers: {
-          token: token,
+          Authorization: `token ${token}`,
         },
       }
     )
       .then((_result) => {
-        if (!_result.data.goFirst)
-          setMark("O");
+        if (!_result.data.goFirst) setMark("O");
         if (_result.data.code === 0) {
           setTurn(true);
         } else {
@@ -132,7 +130,7 @@ function Room() {
   const handleNewUserMessage = (newMessage) => {
     console.log(`New message incomig! ${newMessage}`);
     Socket.emit("room", room);
-    Socket.emit("send-chat-message", (newMessage));
+    Socket.emit("send-chat-message", newMessage);
     // addResponseMessage("hello!");
     // Now send the message throught the backend API
   };

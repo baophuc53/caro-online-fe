@@ -49,7 +49,7 @@ function JoinRoomDialog() {
             { room_id: result.data.data.room_id },
             {
               headers: {
-                token: token,
+                Authorization: `token ${token}`,
               },
             }
           )
