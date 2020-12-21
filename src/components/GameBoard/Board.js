@@ -23,7 +23,7 @@ const Board = (props) => {
     return board;
   };
 
-  return <div className = "board">{createBoard(30)}</div>;
+  return <div className = "board">{createBoard(20)}</div>;
 };
 
 export default Board;

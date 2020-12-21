@@ -19,8 +19,7 @@ import config from "../../config/config.json";
 const { Sider, Content } = Layout;
 
 function Room() {
-  const [player1, setPlayer1] = useState({});
-  const [squares, setSquares] = useState(Array(900).fill(null));
+  const [squares, setSquares] = useState(Array(400).fill(null));
   const [turn, setTurn] = useState(true);
   const [mark, setMark] = useState("X");
   const token = localStorage.getItem("token");
@@ -32,7 +31,7 @@ function Room() {
     setSquares(s);
     Axios.post(
       `${config.dev.path}/room/play`,
-      { room_id: room, data: { square: s } },
+      { room_id: room, data: { square: s, move: i} },
       {
         headers: {
           token: token,
@@ -42,6 +41,10 @@ function Room() {
       .then((_result) => {
         if (_result.data.code === 0) {
           Socket.emit("swap-turn", room);
+          setTurn(false);
+        } else if (_result.data.code === 1) {
+          alert("You win!")
+          Socket.emit("end-game");
           setTurn(false);
         }
       })
@@ -69,7 +72,7 @@ function Room() {
     {
       title: "Chat",
       dataIndex: "nickname",
-      key: "id",
+      key: "nickname",
       render: (text) => <a>{text}</a>,
     },
   ];
