@@ -11,8 +11,10 @@ import {
 } from "react-router-dom";
 import RegistrationForm from "./components/Register/Register";
 import UserRoute from "./components/Router/UserRoute";
+import LoginOtherRoute from "./components/Router/LoginOtherRoute";
 import Home from "./components/Home/Home";
 import Room from "./components/Room/Room";
+import RegisterOther from "./components/Register/RegisterOther";
 import {Socket} from "./components/Socket/Socket";
 
 function App() {
@@ -37,6 +39,7 @@ function App() {
           <UserRoute path="/users" />
           <Route path="/login" component={LoginScreen} />
           <Route path="/register" component={RegistrationForm} />
+          <LoginOtherRoute path="/register-other" component={() => <RegisterOther/>} />
           <UserRoute path="/home" component={()=> <Home ListonlineUser={onlineUsers}/>}/>
           <UserRoute path="/room" component={Room} />
           <Redirect from="/" to="/home" />
