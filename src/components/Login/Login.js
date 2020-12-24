@@ -1,10 +1,16 @@
-import { Form, Input, Button, Row, Col, Divider  } from "antd";
+import { Form, Input, Button, Row, Col, Divider } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import Axios from "axios";
 import config from "../../config/config.json";
 import "./Login.scss";
-import { BrowserRouter as Router, Switch, Route, Link, Redirect } from "react-router-dom";
-import GoogleLogin from "./LoginByGoogle";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect,
+} from "react-router-dom";
+import OtherLogin from "./LoginOther";
 
 const NormalLoginForm = () => {
   const token = localStorage.getItem("token");
@@ -34,7 +40,7 @@ const NormalLoginForm = () => {
             remember: true,
           }}
           onFinish={onFinish}
-          layout ="vertical"
+          layout="vertical"
         >
           <Form.Item
             name="username"
@@ -83,7 +89,8 @@ const NormalLoginForm = () => {
               Log in
             </Button>
           </Form.Item>
-          <GoogleLogin/>
+
+          <OtherLogin />
         </Form>
       ) : (
         <Redirect to="/home" />

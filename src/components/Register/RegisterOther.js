@@ -44,11 +44,11 @@ const RegistrationForm = () => {
   const [form] = Form.useForm();
 
   const profile = JSON.parse(localStorage.getItem("profile"));
-  console.log(profile);
+  // console.log(profile);
 
   const onFinish = (values) => {
     const nickname  = values;
-    Axios.post(`${config.dev.path}/user/login-with-google/recieve-nickname`, {
+    Axios.post(`${config.dev.path}/user/login-other/recieve-nickname`, {
         nickname: nickname,
         profile: profile,
       })
