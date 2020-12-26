@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Row, Col, Table, Input, Layout, Spin} from "antd";
+import { Button, Row, Col, Table, Input, Layout, Spin, Modal} from "antd";
 import Axios from "axios";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
@@ -25,6 +25,25 @@ function Room() {
   const [wait, setWait] = useState(false);
   const token = localStorage.getItem("token");
   const room = localStorage.getItem("room");
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [inviteName, setInviteName] = useState("");
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => {
+    setIsModalVisible(false);
+    Socket.emit("invite", inviteName);
+    Socket.on("invite-response", (message) => {
+      alert(message);
+    })
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
   const handleClick = (i) => {
     if (!turn) return;
     let s = squares.slice();
@@ -84,6 +103,13 @@ function Room() {
       Give up
     </Button>
   );
+
+  const Invite = (props) => (
+    <Button 
+      onClick={showModal}>
+      Invite
+    </Button>
+  )
 
   const columns = [
     {
@@ -174,6 +200,7 @@ function Room() {
         <Content style={{ padding: "0 50px" }}>
           <BacktoHome />
           <GiveUp />
+          <Invite/>
           <div className={wait?"":"hide-spin"}><Spin/>Waiting for other join room...</div>
           <Layout
             className="site-layout-background"
@@ -188,6 +215,14 @@ function Room() {
           </Layout>
           
         </Content>
+        <Modal title="Basic Modal" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+        <p>Tên người chơi:</p>
+        <Input
+          placeholder="Nhập nickname người chơi..."
+          allowClear
+          onChange={(e) => setInviteName(e.target.value)}
+        />
+      </Modal>
         {/* <Footer /> */}
         <Widget
           handleNewUserMessage={handleNewUserMessage}

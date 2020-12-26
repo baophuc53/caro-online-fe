@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Layout, Table, Menu, Card } from "antd";
+import { Button, Layout, Table, Menu, Card, Modal } from "antd";
 import "./Home.scss";
 import {
   MailOutlined,
@@ -13,15 +13,55 @@ import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import Board from "../GameBoard/Board";
 import Axios from "axios";
+import { Socket } from "../Socket/Socket";
 
 const { Sider, Content } = Layout;
 const { SubMenu } = Menu;
 const ENDPOINT = config.dev.path;
 
 function Home(props) {
-  const [room, setRoom] = useState([]);
+  const [roomWaiting, setRoomWaiting] = useState([]);
+  const [roomPlaying, setRoomPlaying] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [roomId, setRoomId] = useState("");
+  const [senderName, setSenderName] = useState("");
   const token = localStorage.getItem("token");
+
+  const showModal = (data) => {
+    setSenderName(data.nickname);
+    setRoomId(data.room);
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => {
+    setIsModalVisible(false);
+    Axios.post(
+      `${config.dev.path}/room/join-room`,
+      { room_id: roomId },
+      {
+        headers: {
+          Authorization: `token ${token}`,
+        },
+      }
+    )
+      .then((_result) => {
+        if (_result.data.code === 0) {
+          localStorage.setItem("room", roomId);
+          window.location.href = "/room";
+        } else alert("Room is full!");
+      })
+      .catch((_error) => {
+        alert(_error.message);
+      });
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
   useEffect(() => {
+    Socket.on("invite-noti", (data) => {
+      showModal(data);
+    })
     Axios.get(`${config.dev.path}/room`, {
       headers: {
         Authorization: `token ${token}`,
@@ -30,7 +70,8 @@ function Home(props) {
       .then((res) => {
         if (res.data.code === 0) {
           console.log(res.data);
-          setRoom(res.data.data.rooms);
+          setRoomWaiting(res.data.data.waiting);
+          setRoomPlaying(res.data.data.playing);
         }
       })
       .catch((err) => {
@@ -58,20 +99,37 @@ function Home(props) {
       .catch((_error) => {
         alert(_error.message);
       });
-  }
+  };
 
-  const view = () => {
-    
-  }
+  const view = () => {};
 
-  const showListRoom = () => {
+  const showListWaiting = () => {
     const src =
-      (room &&
-        room.map((item, key) => (
-          <Card className="room" 
-          title={item.name_room}
-          extra={<><a onClick={()=>{join(item.id)}}>Join</a>
-                <a onClick={()=>{view(item.id)}}>  View</a></>}><p>{item.nickname}</p></Card>
+      (roomWaiting &&
+        roomWaiting.map((item, key) => (
+          <Card
+            className="room"
+            title={item.name_room}
+            extra={<a onClick={() => {join(item.id);}}>Join</a>}
+            >
+            <p>{item.nickname}</p>
+          </Card>
+        ))) ||
+      [];
+    return src;
+  };
+
+  const showListPlaying = () => {
+    const src =
+      (roomPlaying &&
+        roomPlaying.map((item, key) => (
+          <Card
+            className="room"
+            title={item.name_room}
+            extra={<a onClick={() => {view(item.id);}}>View</a>}
+            >
+            <p>{item.nickname}</p>
+          </Card>
         ))) ||
       [];
     return src;
@@ -124,9 +182,14 @@ function Home(props) {
             <JoinRoomDialog />
           </Content>
         </Layout>
-        <div className="list-room">{showListRoom()} </div>
+        <h2>Waiting room list</h2>
+        <div className="list-room">{showListWaiting()} </div>
+        <h2>Playing room list</h2>
+        <div className="list-room">{showListPlaying()} </div>
       </Content>
-
+      <Modal title="Basic Modal" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+        <p>Người chơi: <b>{senderName}</b> mời bạn vào phòng</p>
+      </Modal>
       <Footer />
     </Layout>
   );
