@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Row, Col, Table, Input, Layout } from "antd";
+import { Button, Row, Col, Table, Input, Layout, Spin, Modal} from "antd";
 import Axios from "axios";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
@@ -22,8 +22,28 @@ function Room() {
   const [squares, setSquares] = useState(Array(400).fill(null));
   const [turn, setTurn] = useState(true);
   const [mark, setMark] = useState("X");
+  const [wait, setWait] = useState(false);
   const token = localStorage.getItem("token");
   const room = localStorage.getItem("room");
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [inviteName, setInviteName] = useState("");
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => {
+    setIsModalVisible(false);
+    Socket.emit("invite", inviteName);
+    Socket.on("invite-response", (message) => {
+      alert(message);
+    })
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
   const handleClick = (i) => {
     if (!turn) return;
     let s = squares.slice();
@@ -45,7 +65,7 @@ function Room() {
             setTurn(false);
           } else if (_result.data.code === 1) {
             alert("You win!");
-            Socket.emit("end-game");
+            Socket.emit("end-game", "win");
             setTurn(false);
           }
         })
@@ -70,6 +90,27 @@ function Room() {
     </Button>
   );
 
+  const GiveUp = (props) => (
+    <Button
+      onClick={() => {
+        if (turn) {
+          Socket.emit("end-game", "lose");
+          setTurn(false);
+          alert("You lose!")
+        }
+      }}
+    >
+      Give up
+    </Button>
+  );
+
+  const Invite = (props) => (
+    <Button 
+      onClick={showModal}>
+      Invite
+    </Button>
+  )
+
   const columns = [
     {
       title: "Chat",
@@ -81,6 +122,7 @@ function Room() {
 
   useEffect(() => {
     Socket.emit("room", room);
+    Socket.emit("join-room", room);
     //get data of game board
     Axios.get(`${config.dev.path}/room/play`, { params: { room_id: room } })
       .then((response) => {
@@ -102,9 +144,15 @@ function Room() {
         if (!_result.data.goFirst) setMark("O");
         if (_result.data.code === 0) {
           setTurn(true);
-        } else {
+        } else if (_result.data.code === 3){
+          setWait(true);
           setTurn(false);
-        }
+          Socket.on("end-waiting", (message) => {
+            setWait(false);
+            if(_result.data.goFirst)
+              setTurn(true);
+          })
+        } else setTurn(false);
       })
       .catch((_error) => {
         alert(_error.message);
@@ -112,21 +160,28 @@ function Room() {
     // Socket.on("default-message", (data) => {
     //   addResponseMessage(data);
     // });
+
     Socket.on("chat-message", (data) => {
       addResponseMessage(data);
     });
     //get game board again when in turn
     Socket.on("get-turn", (message) => {
+      Axios.get(`${config.dev.path}/room/play`, { params: { room_id: room } })
+        .then((response) => {
+          console.log(response.data.data);
+          setSquares(response.data.data.square);
+        })
+        .catch((err) => {
+          alert(err);
+        });
       if (message === "continue") {
-        Axios.get(`${config.dev.path}/room/play`, { params: { room_id: room } })
-          .then((response) => {
-            console.log(response.data.data);
-            setSquares(response.data.data.square);
-          })
-          .catch((err) => {
-            alert(err);
-          });
         setTurn(true);
+      } else if (message === "lose") {
+        alert("You lose!");
+        setTurn(false);
+      } else {
+        alert("You win!");
+        setTurn(false);
       }
     });
   }, []);
@@ -144,6 +199,9 @@ function Room() {
         <Header />
         <Content style={{ padding: "0 50px" }}>
           <BacktoHome />
+          <GiveUp />
+          <Invite/>
+          <div className={wait?"":"hide-spin"}><Spin/>Waiting for other join room...</div>
           <Layout
             className="site-layout-background"
             style={{ margin: "24px 0" }}
@@ -155,7 +213,16 @@ function Room() {
               />
             </Content>
           </Layout>
+          
         </Content>
+        <Modal title="Basic Modal" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+        <p>Tên người chơi:</p>
+        <Input
+          placeholder="Nhập nickname người chơi..."
+          allowClear
+          onChange={(e) => setInviteName(e.target.value)}
+        />
+      </Modal>
         {/* <Footer /> */}
         <Widget
           handleNewUserMessage={handleNewUserMessage}

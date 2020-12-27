@@ -56,7 +56,7 @@ function JoinRoomDialog() {
             .then((_result) => {
               if (_result.data.code === 0) {
                 window.location.href = "/room";
-              }
+              } else alert("Room is full!");
             })
             .catch((_error) => {
               alert(_error.message);

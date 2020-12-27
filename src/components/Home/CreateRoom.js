@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Modal, Button, Input } from "antd";
+import { Modal, Button, Input, Checkbox } from "antd";
 import Draggable from "react-draggable";
 import Axios from "axios";
 import config from "../../config/config.json";
@@ -9,6 +9,8 @@ function NewRoomDialog() {
     visible: false,
     disabled: true,
   });
+  const [isPrivate, setPrivate] = useState(false);
+  const [time, setTime] = useState(0);
   const [roomName, setRoomName] = useState("");
 
   const show_NewRoomDialog = () => {
@@ -39,9 +41,10 @@ function NewRoomDialog() {
 
   const handle_AddNewRoom = () => {
     const token = localStorage.getItem("token");
+    console.log(isPrivate);
     Axios.post(
       `${config.dev.path}/room/new-room`,
-      { name_room: roomName },
+      { name_room: roomName, private: isPrivate, time},
       {
         headers: {
           Authorization: `token ${token}`,
@@ -52,7 +55,8 @@ function NewRoomDialog() {
         console.log(result);
         if (result.data.code === 0) {
           localStorage.setItem("room", result.data.data.id);
-          alert("Mã tham gia phòng là: " + result.data.data.join_code);
+          if (isPrivate)
+            alert("Mã tham gia phòng là: " + result.data.data.join_code);
           Axios.post(
             `${config.dev.path}/room/join-room`,
             { room_id: result.data.data.id },
@@ -124,6 +128,13 @@ function NewRoomDialog() {
           placeholder="Vui lòng nhập tên phòng"
           allowClear
           onChange={(e) => setRoomName(e.target.value)}
+        />
+        <Checkbox onChange={(e) => {setPrivate(e.target.checked)}}>Private</Checkbox>
+        <p>Thời gian một nước:</p>
+        <Input
+          placeholder="Vui lòng nhập số"
+          allowClear
+          onChange={(e) => setTime(parseInt(e.target.value))}
         />
       </Modal>
     </>
