@@ -30,23 +30,13 @@ function LoginOther() {
   };
 
   const onSuccess = (res) => {
-    console.log(res.profileObj);
-    const profile = res.profileObj;
-    const entity = {
-      socialId: profile.googleId,
-      username: profile.googleId,
-    };
-    loginOther(entity);
+    console.log(res);
+    loginOther({ platform: "google", token: res.tokenId });
   };
 
   const responseFacebook = (res) => {
     console.log(res);
-    const profile = res;
-    const entity = {
-      socialId: profile.userID,
-      username: profile.userID,
-    };
-    loginOther(entity);
+    loginOther({ platform: "facebook", token: res.accessToken });
   };
 
   const onFailure = (res) => {

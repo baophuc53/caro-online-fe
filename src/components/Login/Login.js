@@ -47,7 +47,7 @@ const NormalLoginForm = () => {
             rules={[
               {
                 required: true,
-                message: "Please input your Username!",
+                message: "Vui lòng nhập Username!",
               },
             ]}
           >
@@ -61,7 +61,7 @@ const NormalLoginForm = () => {
             rules={[
               {
                 required: true,
-                message: "Please input your Password!",
+                message: "Vui lòng nhập Password!",
               },
             ]}
           >
@@ -73,10 +73,10 @@ const NormalLoginForm = () => {
           </Form.Item>
           <Form.Item>
             <a className="login-form-forgot" href="">
-              Forgot password
+              Quên mật khẩu?
             </a>
             <Link to="/register" className="login-form-register" href="">
-              Register now!
+              Đăng ký tài khoản!
             </Link>
           </Form.Item>
 
@@ -86,7 +86,7 @@ const NormalLoginForm = () => {
               htmlType="submit"
               className="login-form-button"
             >
-              Log in
+              Đăng nhập
             </Button>
           </Form.Item>
 

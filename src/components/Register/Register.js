@@ -44,12 +44,13 @@ const RegistrationForm = () => {
   const [form] = Form.useForm();
 
   const onFinish = (values) => {
-    const { username, password, nickname } = values;
-    Axios.put(`${config.dev.path}/user`, { username, password, nickname })
+    const { username, password, nickname, email } = values;
+    console.log(email);
+    Axios.put(`${config.dev.path}/user`, { username, password, nickname, email })
       .then((res) => {
         console.log(res);
         if (res.data.code === 0) {
-          window.location.href = "/login";
+          window.location.href = `/activate-email`;
         } else alert(res.data.data.message);
       })
       .catch((err) => {
@@ -86,8 +87,8 @@ const RegistrationForm = () => {
           </div>
         </Col>
         <Col span={9} className="form-register">
-          <div >
-            <h2 className="register">REGISTER</h2>
+          <div>
+            <h2 className="register">Đăng ký</h2>
             <Form
               {...formItemLayout}
               form={form}
@@ -103,7 +104,7 @@ const RegistrationForm = () => {
                 rules={[
                   {
                     required: true,
-                    message: "Please input your Username!",
+                    message: "Vui lòng nhập Username!",
                   },
                 ]}
               >
@@ -116,7 +117,7 @@ const RegistrationForm = () => {
                 rules={[
                   {
                     required: true,
-                    message: "Please input your password!",
+                    message: "Vui lòng nhập Password!",
                   },
                 ]}
                 hasFeedback
@@ -132,7 +133,7 @@ const RegistrationForm = () => {
                 rules={[
                   {
                     required: true,
-                    message: "Please confirm your password!",
+                    message: "Vui lòng nhập lại password để xác nhận!",
                   },
                   ({ getFieldValue }) => ({
                     validator(rule, value) {
@@ -140,7 +141,7 @@ const RegistrationForm = () => {
                         return Promise.resolve();
                       }
                       return Promise.reject(
-                        "The two passwords that you entered do not match!"
+                        "Mật khẩu nhập lại không khớp!"
                       );
                     },
                   }),
@@ -154,7 +155,7 @@ const RegistrationForm = () => {
                 label={
                   <span>
                     Nickname
-                    <Tooltip title="What do you want others to call you?">
+                    <Tooltip title="Đây là tên hiển thị của bạn mà mọi người sẽ nhìn thấy trên trò chơi">
                       <QuestionCircleOutlined />
                     </Tooltip>
                   </span>
@@ -162,13 +163,32 @@ const RegistrationForm = () => {
                 rules={[
                   {
                     required: true,
-                    message: "Please input your nickname!",
+                    message: "Vui lòng nhập nickname!",
                     whitespace: true,
                   },
                 ]}
               >
                 <Input />
               </Form.Item>
+              <Form.Item
+                name="email"
+                label="Email"
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng nhập email!",
+                  },
+                  {
+                    type: 'email',
+                    message: 'Email không hợp lệ!'
+                  }
+                ]}
+              >
+                <Input
+                  type="email"
+                />
+              </Form.Item>
+
               <Form.Item {...tailFormItemLayout}>
                 <Button type="primary" htmlType="submit">
                   Register
