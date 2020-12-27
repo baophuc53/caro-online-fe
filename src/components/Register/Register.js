@@ -46,11 +46,27 @@ const RegistrationForm = () => {
   const onFinish = (values) => {
     const { username, password, nickname, email } = values;
     console.log(email);
-    Axios.put(`${config.dev.path}/user`, { username, password, nickname, email })
+    Axios.put(`${config.dev.path}/user`, {
+      username,
+      password,
+      nickname,
+      email,
+    })
       .then((res) => {
         console.log(res);
         if (res.data.code === 0) {
-          window.location.href = `/activate-email`;
+          //xử lý gửi email
+          Axios.post(`${config.dev.path}/user/send-email`, {
+            email_token: res.data.data.email_token,
+          }).then((res) => {
+            if (res.data.code === 0) {
+              localStorage.setItem("otp_token", res.data.data.otp_token);
+              localStorage.setItem("email_token", res.data.data.email_token);
+              window.location.href = `/activate-email`;
+            } else {
+              alert('Không thể gửi mã xác thực tới email của bạn !');
+            }
+          });
         } else alert(res.data.data.message);
       })
       .catch((err) => {
@@ -140,9 +156,7 @@ const RegistrationForm = () => {
                       if (!value || getFieldValue("password") === value) {
                         return Promise.resolve();
                       }
-                      return Promise.reject(
-                        "Mật khẩu nhập lại không khớp!"
-                      );
+                      return Promise.reject("Mật khẩu nhập lại không khớp!");
                     },
                   }),
                 ]}
@@ -179,14 +193,12 @@ const RegistrationForm = () => {
                     message: "Vui lòng nhập email!",
                   },
                   {
-                    type: 'email',
-                    message: 'Email không hợp lệ!'
-                  }
+                    type: "email",
+                    message: "Email không hợp lệ!",
+                  },
                 ]}
               >
-                <Input
-                  type="email"
-                />
+                <Input type="email" />
               </Form.Item>
 
               <Form.Item {...tailFormItemLayout}>

@@ -14,14 +14,28 @@ import OtherLogin from "./LoginOther";
 
 const NormalLoginForm = () => {
   const token = localStorage.getItem("token");
-  const onFinish = (values) => {
+  const onFinish = async (values) => {
     const { username, password } = values;
-    Axios.post(`${config.dev.path}/user`, { username, password })
-      .then((res) => {
+    await Axios.post(`${config.dev.path}/user`, { username, password })
+      .then(async (res) => {
         console.log(res);
         if (res.data.code === 0) {
           localStorage.setItem("token", res.data.data.token);
           window.location.href = "/home";
+        } else if (res.data.code === 3) {
+          //gửi mail xác thực
+          const email_token = res.data.data.email_token;
+          await Axios.post(`${config.dev.path}/user/send-email`, {
+            email_token: email_token,
+          }).then((res) => {
+            if (res.data.code === 0) {
+              localStorage.setItem("otp_token", res.data.data.otp_token);
+              localStorage.setItem("email_token", email_token);
+              window.location.href = `/activate-email`;
+            } else {
+              alert("Không thể gửi mã xác thực tới email của bạn !");
+            }
+          });
         } else alert(res.data.message);
       })
       .catch((err) => {

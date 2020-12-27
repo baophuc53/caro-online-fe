@@ -42,21 +42,45 @@ const tailFormItemLayout = {
 
 const RegistrationForm = () => {
   const [form] = Form.useForm();
+  
+  const resendEmail = () => {
+    const email_token = localStorage.getItem("email_token");
+    console.log(email_token);
+    if (email_token !== null || typeof email_token !== undefined) {
+      Axios.post(`${config.dev.path}/user/send-email`, {
+        email_token: email_token,
+      }).then((res) => {
+        if (res.data.code === 0) {
+          localStorage.setItem("otp_token", res.data.data.otp_token);
+          // window.location.href = `/activate-email`;
+        } else {
+          alert('Không thể gửi mã xác thực tới email của bạn !');
+        }
+      });
+    }
+    else {
+      alert("Không tìm thấy email của bạn");
+    }
+  }
 
   const onFinish = (values) => {
-    // const { username, password, nickname, email } = values;
-    // console.log(email);
-    // Axios.put(`${config.dev.path}/user`, { username, password, nickname, email })
-    //   .then((res) => {
-    //     console.log(res);
-    //     if (res.data.code === 0) {
-    //       window.location.href = "/activate";
-    //     } else alert(res.data.data.message);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //     alert(err.message);
-    //   });
+    const { activate_code } = values;
+    const otp_token = localStorage.getItem("otp_token");
+    Axios.put(`${config.dev.path}/user/activated`, {
+      otp_token: otp_token,
+      activate_code: activate_code,
+    })
+      .then((res) => {
+        console.log(res);
+        if (res.data.code === 0) {
+          localStorage.clear();
+          window.location.href = "/login";
+        } else alert(res.data.data.message);
+      })
+      .catch((err) => {
+        console.log(err);
+        alert(err.message);
+      });
   };
 
   return (
@@ -98,7 +122,6 @@ const RegistrationForm = () => {
               scrollToFirstError
               // className="register-form"
             >
-              
               <Form.Item
                 name="activate_code"
                 label={
@@ -122,13 +145,13 @@ const RegistrationForm = () => {
 
               <Form.Item {...tailFormItemLayout}>
                 <Button type="primary" htmlType="submit">
-                  Đồng ý
-                  {/* <Link to ='/'></Link> */}
+                  Đồng ý{/* <Link to ='/'></Link> */}
                 </Button>
               </Form.Item>
             </Form>
           </div>
         </Col>
+        <Button type="primary" onClick={()=> resendEmail()}>Gửi lại</Button>
       </Row>
 
       {/* <RegistrationForm/> */}
