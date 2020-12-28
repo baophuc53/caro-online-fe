@@ -17,6 +17,8 @@ import Room from "./components/Room/Room";
 import RegisterOther from "./components/Register/RegisterOther";
 import ActivateRoute from "./components/Router/ActivateRoute";
 import Activate from "./components/Register/Activate";
+import ForgotPassword from "./components/Login/ForgotPassword";
+import ForgotPasswordRoute from "./components/Router/FortPasswordRoute";
 import {Socket} from "./components/Socket/Socket";
 
 function App() {
@@ -43,6 +45,7 @@ function App() {
           <Route path="/register" component={RegistrationForm} />
           <ActivateRoute path="/activate-email" component={Activate}/>
           <LoginOtherRoute path="/register-other" component={() => <RegisterOther/>} />
+          <ForgotPasswordRoute path="/forgot-password" component={ForgotPassword}/>
           <UserRoute path="/home" component={()=> <Home ListonlineUser={onlineUsers}/>}/>
           <UserRoute path="/room" component={Room} />
           <Redirect from="/" to="/home" />

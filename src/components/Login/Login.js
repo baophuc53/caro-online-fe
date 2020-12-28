@@ -11,8 +11,15 @@ import {
   Redirect,
 } from "react-router-dom";
 import OtherLogin from "./LoginOther";
+import ForgotPasswordDialog from "./ForgotPasswordDialog";
+import ForgotPassword from "./ForgotPassword";
 
 const NormalLoginForm = () => {
+
+  const onClickForgotPassword = () => {
+
+  }
+
   const token = localStorage.getItem("token");
   const onFinish = async (values) => {
     const { username, password } = values;
@@ -86,9 +93,7 @@ const NormalLoginForm = () => {
             />
           </Form.Item>
           <Form.Item>
-            <a className="login-form-forgot" href="">
-              Quên mật khẩu?
-            </a>
+            <ForgotPasswordDialog/>
             <Link to="/register" className="login-form-register" href="">
               Đăng ký tài khoản!
             </Link>

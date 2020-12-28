@@ -42,7 +42,7 @@ const tailFormItemLayout = {
 
 const RegistrationForm = () => {
   const [form] = Form.useForm();
-  
+
   const resendEmail = () => {
     const email_token = localStorage.getItem("email_token");
     console.log(email_token);
@@ -54,14 +54,13 @@ const RegistrationForm = () => {
           localStorage.setItem("otp_token", res.data.data.otp_token);
           // window.location.href = `/activate-email`;
         } else {
-          alert('Không thể gửi mã xác thực tới email của bạn !');
+          alert("Không thể gửi mã xác thực tới email của bạn !");
         }
       });
-    }
-    else {
+    } else {
       alert("Không tìm thấy email của bạn");
     }
-  }
+  };
 
   const onFinish = (values) => {
     const { activate_code } = values;
@@ -144,6 +143,9 @@ const RegistrationForm = () => {
               </Form.Item>
 
               <Form.Item {...tailFormItemLayout}>
+              <Button type="primary" style={{margin: "10px"}} onClick={() => resendEmail()}>
+                  Gửi lại
+                </Button>
                 <Button type="primary" htmlType="submit">
                   Đồng ý{/* <Link to ='/'></Link> */}
                 </Button>
@@ -151,7 +153,6 @@ const RegistrationForm = () => {
             </Form>
           </div>
         </Col>
-        <Button type="primary" onClick={()=> resendEmail()}>Gửi lại</Button>
       </Row>
 
       {/* <RegistrationForm/> */}
