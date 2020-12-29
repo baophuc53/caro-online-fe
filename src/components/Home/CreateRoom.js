@@ -134,6 +134,7 @@ function NewRoomDialog() {
         <Input
           placeholder="Vui lòng nhập số"
           allowClear
+          type="number"
           onChange={(e) => setTime(parseInt(e.target.value))}
         />
       </Modal>
