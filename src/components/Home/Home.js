@@ -9,6 +9,7 @@ import {
 import config from "../../config/config.json";
 import NewRoomDialog from "./CreateRoom";
 import JoinRoomDialog from "./JoinRoom";
+import QuickPlay from "./QuickPlay";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import Board from "../GameBoard/Board";
@@ -58,6 +59,7 @@ function Home(props) {
   const handleCancel = () => {
     setIsModalVisible(false);
   };
+
   useEffect(() => {
     Socket.on("invite-noti", (data) => {
       showModal(data);
@@ -180,6 +182,9 @@ function Home(props) {
           </Content>
           <Content style={{ padding: "0 24px", minHeight: 280 }}>
             <JoinRoomDialog />
+          </Content>
+          <Content style={{ padding: "0 24px", minHeight: 280 }}>
+            <QuickPlay />
           </Content>
         </Layout>
         <h2>Waiting room list</h2>

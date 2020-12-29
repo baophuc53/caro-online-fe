@@ -169,7 +169,8 @@ function Room() {
       Axios.get(`${config.dev.path}/room/play`, { params: { room_id: room } })
         .then((response) => {
           console.log(response.data.data);
-          setSquares(response.data.data.square);
+          if (response.data.data.square)
+            setSquares(response.data.data.square);
         })
         .catch((err) => {
           alert(err);
