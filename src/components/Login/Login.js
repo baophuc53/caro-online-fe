@@ -11,17 +11,38 @@ import {
   Redirect,
 } from "react-router-dom";
 import OtherLogin from "./LoginOther";
+import ForgotPasswordDialog from "./ForgotPasswordDialog";
+import ForgotPassword from "./ForgotPassword";
 
 const NormalLoginForm = () => {
+
+  const onClickForgotPassword = () => {
+
+  }
+
   const token = localStorage.getItem("token");
-  const onFinish = (values) => {
+  const onFinish = async (values) => {
     const { username, password } = values;
-    Axios.post(`${config.dev.path}/user`, { username, password })
-      .then((res) => {
+    await Axios.post(`${config.dev.path}/user`, { username, password })
+      .then(async (res) => {
         console.log(res);
         if (res.data.code === 0) {
           localStorage.setItem("token", res.data.data.token);
           window.location.href = "/home";
+        } else if (res.data.code === 3) {
+          //gửi mail xác thực
+          const email_token = res.data.data.email_token;
+          await Axios.post(`${config.dev.path}/user/send-email`, {
+            email_token: email_token,
+          }).then((res) => {
+            if (res.data.code === 0) {
+              localStorage.setItem("otp_token", res.data.data.otp_token);
+              localStorage.setItem("email_token", email_token);
+              window.location.href = `/activate-email`;
+            } else {
+              alert("Không thể gửi mã xác thực tới email của bạn !");
+            }
+          });
         } else alert(res.data.message);
       })
       .catch((err) => {
@@ -47,7 +68,7 @@ const NormalLoginForm = () => {
             rules={[
               {
                 required: true,
-                message: "Please input your Username!",
+                message: "Vui lòng nhập Username!",
               },
             ]}
           >
@@ -61,7 +82,7 @@ const NormalLoginForm = () => {
             rules={[
               {
                 required: true,
-                message: "Please input your Password!",
+                message: "Vui lòng nhập Password!",
               },
             ]}
           >
@@ -72,11 +93,9 @@ const NormalLoginForm = () => {
             />
           </Form.Item>
           <Form.Item>
-            <a className="login-form-forgot" href="">
-              Forgot password
-            </a>
+            <ForgotPasswordDialog/>
             <Link to="/register" className="login-form-register" href="">
-              Register now!
+              Đăng ký tài khoản!
             </Link>
           </Form.Item>
 
@@ -86,7 +105,7 @@ const NormalLoginForm = () => {
               htmlType="submit"
               className="login-form-button"
             >
-              Log in
+              Đăng nhập
             </Button>
           </Form.Item>
 
