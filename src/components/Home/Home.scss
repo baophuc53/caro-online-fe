@@ -1,9 +1,9 @@
-.layout-home{
+.layout-home {
     height: 100vh;
-    .ant-layout-content{
+    .ant-layout-content {
         background-color: white;
     }
-    .ant-layout-footer{
+    .ant-layout-footer {
         position: fixed;
         bottom: 0;
         right: 0;
@@ -11,10 +11,7 @@
     }
 }
 
-.list-room {
-    display: flex;
-    
-}
 .room {
-    min-width: 200px;
+    width: 100%;
+    margin-bottom: 15px;
 }

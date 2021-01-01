@@ -71,7 +71,7 @@ function JoinRoomDialog() {
 
   return (
     <>
-      <Button onClick={show_JoinRoomDialog}>Vào Phòng</Button>
+      <Button onClick={show_JoinRoomDialog} type="primary">Vào Phòng</Button>
       <Modal
         title={
           <div

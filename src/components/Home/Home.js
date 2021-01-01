@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Layout, Table, Menu, Card, Modal } from "antd";
+import { Button, Layout, Table, Menu, Card, Modal, Row, Col, Tabs } from "antd";
 import "./Home.scss";
 import {
   MailOutlined,
@@ -15,7 +15,7 @@ import Footer from "../Footer/Footer";
 import Board from "../GameBoard/Board";
 import Axios from "axios";
 import { Socket } from "../Socket/Socket";
-
+const { TabPane } = Tabs;
 const { Sider, Content } = Layout;
 const { SubMenu } = Menu;
 const ENDPOINT = config.dev.path;
@@ -63,7 +63,7 @@ function Home(props) {
   useEffect(() => {
     Socket.on("invite-noti", (data) => {
       showModal(data);
-    })
+    });
     Axios.get(`${config.dev.path}/room`, {
       headers: {
         Authorization: `token ${token}`,
@@ -109,13 +109,24 @@ function Home(props) {
     const src =
       (roomWaiting &&
         roomWaiting.map((item, key) => (
-          <Card
-            className="room"
-            title={item.name_room}
-            extra={<a onClick={() => {join(item.id);}}>Join</a>}
+          <Col span={6}>
+            <Card
+              className="room"
+              title={item.name_room}
+              type="inner"
+              extra={
+                <a
+                  onClick={() => {
+                    join(item.id);
+                  }}
+                >
+                  Join
+                </a>
+              }
             >
-            <p>{item.nickname}</p>
-          </Card>
+              <p>{item.nickname}</p>
+            </Card>
+          </Col>
         ))) ||
       [];
     return src;
@@ -125,13 +136,24 @@ function Home(props) {
     const src =
       (roomPlaying &&
         roomPlaying.map((item, key) => (
-          <Card
-            className="room"
-            title={item.name_room}
-            extra={<a onClick={() => {view(item.id);}}>View</a>}
+          <Col span={6}>
+            <Card
+              className="room"
+              type="inner"
+              title={item.name_room}
+              extra={
+                <a
+                  onClick={() => {
+                    view(item.id);
+                  }}
+                >
+                  View
+                </a>
+              }
             >
-            <p>{item.nickname}</p>
-          </Card>
+              <p>{item.nickname}</p>
+            </Card>
+          </Col>
         ))) ||
       [];
     return src;
@@ -165,7 +187,17 @@ function Home(props) {
   data.forEach((data) => (data.key = data.nickname));
   return (
     <Layout className="layout-home">
-      <Header />
+      <Header>
+        <Menu.Item key="5" style={{marginLeft: '130px'}}>
+          <NewRoomDialog />
+        </Menu.Item>
+        <Menu.Item key="7">
+          <JoinRoomDialog />
+        </Menu.Item>
+        <Menu.Item key="6">
+          <QuickPlay />
+        </Menu.Item>
+      </Header>
       <Content style={{ padding: "0 50px" }}>
         <Layout className="site-layout-background" style={{ margin: "24px 0" }}>
           <Sider className="site-layout-background" width={200} theme="light">
@@ -177,23 +209,42 @@ function Home(props) {
             />
           </Sider>
 
-          <Content style={{ padding: "0 24px", minHeight: 280 }}>
-            <NewRoomDialog />
-          </Content>
-          <Content style={{ padding: "0 24px", minHeight: 280 }}>
-            <JoinRoomDialog />
-          </Content>
-          <Content style={{ padding: "0 24px", minHeight: 280 }}>
-            <QuickPlay />
+          <Content style={{ padding: "0 30px" }}>
+            <Tabs defaultActiveKey="1" type="card" size='Large'>
+              <TabPane tab="Waiting Room" key="1">
+                <Row gutter={16}>{showListWaiting()}</Row>
+              </TabPane>
+              <TabPane tab="Playing Room" key="2">
+                <Row gutter={16}>{showListPlaying()}</Row>
+              </TabPane>
+            </Tabs>
+            ,
+            {/* <Row gutter={24}>
+              <Col span={12}>
+                <h2 style={{ textAlign: "center", color: "red" }}>
+                  Waiting room list
+                </h2>
+                <Row gutter={16}>{showListWaiting()}</Row>
+              </Col>
+              <Col span={12}>
+                <h2 style={{ textAlign: "center", color: "green" }}>
+                  Playing room list
+                </h2>
+                <Row gutter={16}>{showListPlaying()}</Row>
+              </Col>
+            </Row> */}
           </Content>
         </Layout>
-        <h2>Waiting room list</h2>
-        <div className="list-room">{showListWaiting()} </div>
-        <h2>Playing room list</h2>
-        <div className="list-room">{showListPlaying()} </div>
       </Content>
-      <Modal title="Basic Modal" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
-        <p>Người chơi: <b>{senderName}</b> mời bạn vào phòng</p>
+      <Modal
+        title="Basic Modal"
+        visible={isModalVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
+        <p>
+          Người chơi: <b>{senderName}</b> mời bạn vào phòng
+        </p>
       </Modal>
       <Footer />
     </Layout>

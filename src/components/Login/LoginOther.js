@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import GoogleLogin from "react-google-login";
 import FaceBookLogin from "react-facebook-login";
+import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
 import Axios from "axios";
 import config from "../../config/config.json";
-
+import { AiFillGoogleCircle, AiFillFacebook } from "react-icons/ai";
+import "./Login.scss";
+import { Divider } from "antd";
 const clientId = config.google_client_id;
 const app_Id = config.facebook_app_id;
 
@@ -44,27 +47,45 @@ function LoginOther() {
   };
 
   return (
-    <div>
-      <GoogleLogin
-        clientId={clientId}
-        fields="name,email,picture"
-        buttonText="Login with Google"
-        onSuccess={onSuccess}
-        onFailure={onFailure}
-        cookiePolicy={"single_host_origin"}
-        style={{ marginTop: "10px" }}
-      />
+    <>
+      {/* <div>OR</div> */}
+      <Divider>Hoặc</Divider>
+      <div className="loginOther">
+        <GoogleLogin
+          clientId={clientId}
+          fields="name,email,picture"
+          buttonText={false}
+          onSuccess={onSuccess}
+          onFailure={onFailure}
+          cookiePolicy={"single_host_origin"}
+          style={{ marginTop: "10px" }}
+          render={(renderProps) => (
+            <button
+              onClick={renderProps.onClick}
+              disabled={renderProps.disabled}
+              className="btnFBGG"
+            >
+              <AiFillGoogleCircle className="gg" />
+            </button>
+          )}
+        />
 
-      <FaceBookLogin
-        appId={app_Id}
-        autoLoad={false}
-        fields="name,email,picture"
-        callback={responseFacebook}
-        icon="fa-facebook"
-        buttonStyle={{ marginTop: "10px" }}
-        size="small"
-      />
-    </div>
+        <FacebookLogin
+          appId={app_Id}
+          autoLoad={false}
+          fields="name,email,picture"
+          callback={responseFacebook}
+          icon="fa-facebook"
+          // buttonStyle={{ marginTop: "10px" }}
+          size="small"
+          render={(renderProps) => (
+            <button onClick={renderProps.onClick} className="btnFBGG">
+              <AiFillFacebook className="fb" />
+            </button>
+          )}
+        />
+      </div>
+    </>
   );
 }
 

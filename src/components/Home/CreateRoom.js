@@ -87,7 +87,7 @@ function NewRoomDialog() {
 
   return (
     <>
-      <Button onClick={show_NewRoomDialog}>Tạo Phòng</Button>
+      <Button onClick={show_NewRoomDialog} type="primary">Tạo Phòng</Button>
       <Modal
         title={
           <div
