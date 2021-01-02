@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Row, Col, Table, Input, Layout, Spin, Modal} from "antd";
+import { Button, Row, Col, Table, Input, Layout, Spin, Modal } from "antd";
 import Axios from "axios";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
@@ -37,7 +37,7 @@ function Room() {
     Socket.emit("invite", inviteName);
     Socket.on("invite-response", (message) => {
       alert(message);
-    })
+    });
   };
 
   const handleCancel = () => {
@@ -74,11 +74,6 @@ function Room() {
         });
     }
   };
-  //load user
-
-  //load trạng thái bàn cờ
-
-  //load chat
 
   const BacktoHome = (props) => (
     <Button
@@ -96,7 +91,7 @@ function Room() {
         if (turn) {
           Socket.emit("end-game", "lose");
           setTurn(false);
-          alert("You lose!")
+          alert("You lose!");
         }
       }}
     >
@@ -104,12 +99,7 @@ function Room() {
     </Button>
   );
 
-  const Invite = (props) => (
-    <Button 
-      onClick={showModal}>
-      Invite
-    </Button>
-  )
+  const Invite = (props) => <Button onClick={showModal}>Invite</Button>;
 
   const columns = [
     {
@@ -144,14 +134,13 @@ function Room() {
         if (!_result.data.goFirst) setMark("O");
         if (_result.data.code === 0) {
           setTurn(true);
-        } else if (_result.data.code === 3){
+        } else if (_result.data.code === 3) {
           setWait(true);
           setTurn(false);
           Socket.on("end-waiting", (message) => {
             setWait(false);
-            if(_result.data.goFirst)
-              setTurn(true);
-          })
+            if (_result.data.goFirst) setTurn(true);
+          });
         } else setTurn(false);
       })
       .catch((_error) => {
@@ -169,8 +158,7 @@ function Room() {
       Axios.get(`${config.dev.path}/room/play`, { params: { room_id: room } })
         .then((response) => {
           console.log(response.data.data);
-          if (response.data.data.square)
-            setSquares(response.data.data.square);
+          if (response.data.data.square) setSquares(response.data.data.square);
         })
         .catch((err) => {
           alert(err);
@@ -187,7 +175,7 @@ function Room() {
     });
   }, []);
   const handleNewUserMessage = (newMessage) => {
-    console.log(`New message incomig! ${newMessage}`);
+    console.log(`New message incoming! ${newMessage}`);
     Socket.emit("room", room);
     Socket.emit("send-chat-message", newMessage);
     // addResponseMessage("hello!");
@@ -201,8 +189,11 @@ function Room() {
         <Content style={{ padding: "0 50px" }}>
           <BacktoHome />
           <GiveUp />
-          <Invite/>
-          <div className={wait?"":"hide-spin"}><Spin/>Waiting for other join room...</div>
+          <Invite />
+          <div className={wait ? "" : "hide-spin"}>
+            <Spin />
+            Waiting for other join room...
+          </div>
           <Layout
             className="site-layout-background"
             style={{ margin: "24px 0" }}
@@ -214,16 +205,20 @@ function Room() {
               />
             </Content>
           </Layout>
-          
         </Content>
-        <Modal title="Basic Modal" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
-        <p>Tên người chơi:</p>
-        <Input
-          placeholder="Nhập nickname người chơi..."
-          allowClear
-          onChange={(e) => setInviteName(e.target.value)}
-        />
-      </Modal>
+        <Modal
+          title="Basic Modal"
+          visible={isModalVisible}
+          onOk={handleOk}
+          onCancel={handleCancel}
+        >
+          <p>Tên người chơi:</p>
+          <Input
+            placeholder="Nhập nickname người chơi..."
+            allowClear
+            onChange={(e) => setInviteName(e.target.value)}
+          />
+        </Modal>
         {/* <Footer /> */}
         <Widget
           handleNewUserMessage={handleNewUserMessage}

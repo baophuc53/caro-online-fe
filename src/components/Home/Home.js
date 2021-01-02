@@ -1,24 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Button, Layout, Table, Menu, Card, Modal, Row, Col, Tabs } from "antd";
 import "./Home.scss";
-import {
-  MailOutlined,
-  AppstoreOutlined,
-  SettingOutlined,
-} from "@ant-design/icons";
 import config from "../../config/config.json";
 import NewRoomDialog from "./CreateRoom";
 import JoinRoomDialog from "./JoinRoom";
 import QuickPlay from "./QuickPlay";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
-import Board from "../GameBoard/Board";
 import Axios from "axios";
 import { Socket } from "../Socket/Socket";
 const { TabPane } = Tabs;
 const { Sider, Content } = Layout;
-const { SubMenu } = Menu;
-const ENDPOINT = config.dev.path;
 
 function Home(props) {
   const [roomWaiting, setRoomWaiting] = useState([]);
@@ -158,17 +150,6 @@ function Home(props) {
       [];
     return src;
   };
-
-  const Signout = () => (
-    <Button
-      onClick={() => {
-        localStorage.clear();
-        window.location.href = "/login";
-      }}
-    >
-      Logout
-    </Button>
-  );
 
   const handleClick = (e) => {
     console.log("click ", e);
