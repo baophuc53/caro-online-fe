@@ -1,7 +1,9 @@
 .layout-home {
     height: 100vh;
     .ant-layout-content {
-        background-color: white;
+        background-color: rgb(255, 255, 255);
+        padding: 0;
+        margin: 20px;
     }
     .ant-layout-footer {
         position: fixed;
