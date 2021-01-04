@@ -95,7 +95,10 @@ function Home(props) {
       });
   };
 
-  const view = () => {};
+  const view = (roomId) => {
+    localStorage.setItem("room", roomId);
+    window.location.href="/view";
+  };
 
   const showListWaiting = () => {
     const src =

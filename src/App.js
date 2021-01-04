@@ -14,6 +14,7 @@ import UserRoute from "./components/Router/UserRoute";
 import LoginOtherRoute from "./components/Router/LoginOtherRoute";
 import Home from "./components/Home/Home";
 import Room from "./components/Room/Room";
+import ShowRoom from "./components/ShowRoom/ShowRoom";
 import RegisterOther from "./components/Register/RegisterOther";
 import ActivateRoute from "./components/Router/ActivateRoute";
 import Activate from "./components/Register/Activate";
@@ -48,6 +49,7 @@ function App() {
           <ForgotPasswordRoute path="/forgot-password" component={ForgotPassword}/>
           <UserRoute path="/home" component={()=> <Home ListonlineUser={onlineUsers}/>}/>
           <UserRoute path="/room" component={Room} />
+          <UserRoute path="/view" component={ShowRoom}/>
           <Redirect from="/" to="/home" />
         </Switch>
 

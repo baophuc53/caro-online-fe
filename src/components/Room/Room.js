@@ -23,6 +23,7 @@ function Room() {
   const [turn, setTurn] = useState(true);
   const [mark, setMark] = useState("X");
   const [wait, setWait] = useState(false);
+  const [counter, setCounter] = useState(-1);
   const token = localStorage.getItem("token");
   const room = localStorage.getItem("room");
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -116,7 +117,13 @@ function Room() {
     //get data of game board
     Axios.get(`${config.dev.path}/room/play`, { params: { room_id: room } })
       .then((response) => {
-        if (response.data.data) setSquares(response.data.data.square);
+        console.log(response.data);
+        if (response.data.data) {
+          setSquares(response.data.data.square);
+        }
+        if (response.data.time) {
+          setCounter(response.data.time);
+        }
       })
       .catch((err) => {});
 
@@ -157,8 +164,9 @@ function Room() {
     Socket.on("get-turn", (message) => {
       Axios.get(`${config.dev.path}/room/play`, { params: { room_id: room } })
         .then((response) => {
-          console.log(response.data.data);
+          console.log(response.data);
           if (response.data.data.square) setSquares(response.data.data.square);
+          setCounter(response.data.time);
         })
         .catch((err) => {
           alert(err);
@@ -174,6 +182,16 @@ function Room() {
       }
     });
   }, []);
+
+  useEffect(() => {
+    turn && counter > 0 && setTimeout(() => setCounter(counter - 1), 1000);
+    if (counter === 0) {
+      Socket.emit("end-game", "lose");
+      setTurn(false);
+      alert("You lose!");
+    }
+  }, [counter]);
+
   const handleNewUserMessage = (newMessage) => {
     console.log(`New message incoming! ${newMessage}`);
     Socket.emit("room", room);
@@ -190,6 +208,9 @@ function Room() {
           <BacktoHome />
           <GiveUp />
           <Invite />
+          <Content>
+            Time: <span className={turn ? "" : "hide-spin"}>{counter}</span>
+          </Content>
           <div className={wait ? "" : "hide-spin"}>
             <Spin />
             Waiting for other join room...
