@@ -171,7 +171,7 @@ function Home(props) {
   data.forEach((data) => (data.key = data.nickname));
   return (
     <Layout className="layout-home">
-      <Header>
+      <Header nickname = {props.nickname}>
         <Menu.Item key="5" style={{marginLeft: '130px'}}>
           <NewRoomDialog />
         </Menu.Item>

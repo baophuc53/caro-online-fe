@@ -18,7 +18,7 @@ import config from "../../config/config.json";
 
 const { Sider, Content } = Layout;
 
-function Room() {
+function Room(props) {
   const [squares, setSquares] = useState(Array(400).fill(null));
   const [turn, setTurn] = useState(true);
   const [mark, setMark] = useState("X");
@@ -203,7 +203,7 @@ function Room() {
   return (
     <div>
       <Layout className="layout-home">
-        <Header />
+        <Header nickname = {props.nickname}/>
         <Content style={{ padding: "0 50px" }}>
           <BacktoHome />
           <GiveUp />

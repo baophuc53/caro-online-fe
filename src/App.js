@@ -20,10 +20,12 @@ import ActivateRoute from "./components/Router/ActivateRoute";
 import Activate from "./components/Register/Activate";
 import ForgotPassword from "./components/Login/ForgotPassword";
 import ForgotPasswordRoute from "./components/Router/FortPasswordRoute";
-import {Socket} from "./components/Socket/Socket";
+import Ranking from "./components/Ranking/ranking";
+import { Socket } from "./components/Socket/Socket";
 
 function App() {
   const [onlineUsers, setonlineUsers] = useState([]);
+  const [nickname, setNickName] = useState("Try Again");
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -33,6 +35,9 @@ function App() {
       Socket.on("send-online-user-list", (data) => {
         console.log(data);
         setonlineUsers(data);
+      });
+      Socket.on("nickname", (data) => {
+        setNickName(data);
       });
     }
   }, []);
@@ -44,15 +49,29 @@ function App() {
           <UserRoute path="/users" />
           <Route path="/login" component={LoginScreen} />
           <Route path="/register" component={RegistrationForm} />
-          <ActivateRoute path="/activate-email" component={Activate}/>
-          <LoginOtherRoute path="/register-other" component={() => <RegisterOther/>} />
-          <ForgotPasswordRoute path="/forgot-password" component={ForgotPassword}/>
-          <UserRoute path="/home" component={()=> <Home ListonlineUser={onlineUsers}/>}/>
-          <UserRoute path="/room" component={Room} />
-          <UserRoute path="/view" component={ShowRoom}/>
+          <ActivateRoute path="/activate-email" component={Activate} />
+          <LoginOtherRoute
+            path="/register-other"
+            component={() => <RegisterOther />}
+          />
+          <ForgotPasswordRoute
+            path="/forgot-password"
+            component={ForgotPassword}
+          />
+          <UserRoute
+            path="/home"
+            component={() => (
+              <Home ListonlineUser={onlineUsers} nickname={nickname} />
+            )}
+          />
+          <UserRoute
+            path="/room"
+            component={() => <Room nickname={nickname} />}
+          />
+          <UserRoute path="/view" component={ShowRoom} />
+          <UserRoute path="/ranking" component={() => <Ranking nickname = {nickname}/>}/>
           <Redirect from="/" to="/home" />
         </Switch>
-
       </div>
     </Router>
   );
