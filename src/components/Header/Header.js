@@ -7,6 +7,7 @@ import InfoDialog from "../Infomation/Infomation";
 const { Header } = Layout;
 
 function Header_(props) {
+  const nickname = localStorage.getItem("nickname");
   const menu = (
     <Menu>
       <Menu.Item>
@@ -32,13 +33,14 @@ function Header_(props) {
   return (
     <Header className="header">
       <div className="logo" />
+      
       <Menu theme="dark" mode="horizontal" defaultSelectedKeys={["1"]}>
       <Menu.Item key="1" onClick={() => toRankPage()}>
         <TrophyFilled style={{ fontSize: "30px", color: "yellow" }} />
       </Menu.Item>
         <Menu.Item key="4" style={{ float: "right" }}>
           <Dropdown overlay={menu} placement="bottomCenter">
-            <Button>{props.nickname}</Button>
+            <Button>{nickname}</Button>
           </Dropdown>
         </Menu.Item>
         {props.children}

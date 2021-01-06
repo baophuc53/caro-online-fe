@@ -45,7 +45,7 @@ function Ranking(props) {
   return (
     <>
       <Layout className="layout-home">
-        <Header nickname={props.nickname} />
+        <Header/>
         <BacktoHome />
         <Title level={2} type="warning" style={{ textAlign: "center" }}>
           RANKING

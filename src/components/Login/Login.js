@@ -28,6 +28,7 @@ const NormalLoginForm = () => {
         console.log(res);
         if (res.data.code === 0) {
           localStorage.setItem("token", res.data.data.token);
+          localStorage.setItem("nickname", res.data.data.nickname);
           window.location.href = "/home";
         } else if (res.data.code === 3) {
           //gửi mail xác thực

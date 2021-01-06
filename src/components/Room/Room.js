@@ -115,17 +115,7 @@ function Room(props) {
     Socket.emit("room", room);
     Socket.emit("join-room", room);
     //get data of game board
-    Axios.get(`${config.dev.path}/room/play`, { params: { room_id: room } })
-      .then((response) => {
-        console.log(response.data);
-        if (response.data.data) {
-          setSquares(response.data.data.square);
-        }
-        if (response.data.time) {
-          setCounter(response.data.time);
-        }
-      })
-      .catch((err) => {});
+    fetchData();
 
     //check turn
     Axios.post(
@@ -162,15 +152,7 @@ function Room(props) {
     });
     //get game board again when in turn
     Socket.on("get-turn", (message) => {
-      Axios.get(`${config.dev.path}/room/play`, { params: { room_id: room } })
-        .then((response) => {
-          console.log(response.data);
-          if (response.data.data.square) setSquares(response.data.data.square);
-          setCounter(response.data.time);
-        })
-        .catch((err) => {
-          alert(err);
-        });
+      fetchData();
       if (message === "continue") {
         setTurn(true);
       } else if (message === "lose") {
@@ -192,6 +174,22 @@ function Room(props) {
     }
   }, [counter]);
 
+  const fetchData = () => {
+    Axios.get(`${config.dev.path}/room/play`, { params: { room_id: room } })
+      .then((response) => {
+        console.log(response.data);
+        if (response.data.data) {
+          setSquares(response.data.data.square);
+        }
+        if (response.data.time) {
+          setCounter(response.data.time);
+        }
+      })
+      .catch((err) => {
+        alert(err);
+      });
+  };
+
   const handleNewUserMessage = (newMessage) => {
     console.log(`New message incoming! ${newMessage}`);
     Socket.emit("room", room);
@@ -203,7 +201,7 @@ function Room(props) {
   return (
     <div>
       <Layout className="layout-home">
-        <Header nickname = {props.nickname}/>
+        <Header />
         <Content style={{ padding: "0 50px" }}>
           <BacktoHome />
           <GiveUp />

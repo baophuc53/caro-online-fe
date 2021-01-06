@@ -25,8 +25,6 @@ import { Socket } from "./components/Socket/Socket";
 
 function App() {
   const [onlineUsers, setonlineUsers] = useState([]);
-  const [nickname, setNickName] = useState("Try Again");
-
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -35,9 +33,6 @@ function App() {
       Socket.on("send-online-user-list", (data) => {
         console.log(data);
         setonlineUsers(data);
-      });
-      Socket.on("nickname", (data) => {
-        setNickName(data);
       });
     }
   }, []);
@@ -52,7 +47,7 @@ function App() {
           <ActivateRoute path="/activate-email" component={Activate} />
           <LoginOtherRoute
             path="/register-other"
-            component={() => <RegisterOther />}
+            component={RegisterOther}
           />
           <ForgotPasswordRoute
             path="/forgot-password"
@@ -61,15 +56,15 @@ function App() {
           <UserRoute
             path="/home"
             component={() => (
-              <Home ListonlineUser={onlineUsers} nickname={nickname} />
+              <Home ListonlineUser={onlineUsers}/>
             )}
           />
           <UserRoute
             path="/room"
-            component={() => <Room nickname={nickname} />}
+            component={Room}
           />
-          <UserRoute path="/view" component={ShowRoom} />
-          <UserRoute path="/ranking" component={() => <Ranking nickname = {nickname}/>}/>
+          <UserRoute path="/view" component={ShowRoom}/>
+          <UserRoute path="/ranking" component={Ranking}/>
           <Redirect from="/" to="/home" />
         </Switch>
       </div>

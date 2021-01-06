@@ -29,7 +29,7 @@ const QuickPlay = () => {
         Chơi nhanh
       </Button>
       <Modal
-        title="Basic Modal"
+        title="Quick play"
         footer={null}
         visible={isModalVisible}
         onCancel={handleCancel}

@@ -56,6 +56,10 @@ function Home(props) {
     Socket.on("invite-noti", (data) => {
       showModal(data);
     });
+    fetchData();
+  }, []);
+
+  const fetchData = () => {
     Axios.get(`${config.dev.path}/room`, {
       headers: {
         Authorization: `token ${token}`,
@@ -72,7 +76,7 @@ function Home(props) {
         console.log(err);
         alert(err.message);
       });
-  }, []);
+  }
 
   const join = (roomId) => {
     Axios.post(
@@ -171,7 +175,7 @@ function Home(props) {
   data.forEach((data) => (data.key = data.nickname));
   return (
     <Layout className="layout-home">
-      <Header nickname = {props.nickname}>
+      <Header>
         <Menu.Item key="5" style={{marginLeft: '130px'}}>
           <NewRoomDialog />
         </Menu.Item>
