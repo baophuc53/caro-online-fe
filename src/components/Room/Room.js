@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Row, Col, Table, Input, Layout, Spin, Modal } from "antd";
+import { Button, Row, Col, Menu, Input, Layout, Spin, Modal } from "antd";
 import Axios from "axios";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
@@ -87,6 +87,8 @@ function Room() {
 
   const GiveUp = (props) => (
     <Button
+      danger
+      type="primary"
       onClick={() => {
         if (turn) {
           Socket.emit("end-game", "lose");
@@ -185,29 +187,57 @@ function Room() {
   return (
     <div>
       <Layout className="layout-home">
-        <Header />
+        <Header>
+          <Menu.Item key="5" style={{ marginLeft: "130px" }}>
+            <BacktoHome />
+          </Menu.Item>
+          <Menu.Item key="6">
+            <Invite />
+          </Menu.Item>
+          <Menu.Item key="7">
+            <GiveUp />
+          </Menu.Item>
+        </Header>
         <Content style={{ padding: "0 50px" }}>
-          <BacktoHome />
+          {/* <BacktoHome />
           <GiveUp />
-          <Invite />
-          <div className={wait ? "" : "hide-spin"}>
-            <Spin />
-            Waiting for other join room...
-          </div>
-          <Layout
-            className="site-layout-background"
-            style={{ margin: "24px 0" }}
-          >
-            <Content style={{ padding: "0 24px", minHeight: 280 }}>
-              <Board
-                squares={squares.slice()}
-                onClick={(i) => handleClick(i)}
-              />
-            </Content>
-          </Layout>
+          <Invite /> */}
+          {wait ? (
+            <Spin tip="Waiting for other join room...">
+              <Layout
+                className="site-layout-background"
+                style={{ margin: "24px 0" }}
+              >
+                <Content
+                  style={{ padding: "0 24px", minHeight: 280 }}
+                  className="playBoard"
+                >
+                  <Board
+                    squares={squares.slice()}
+                    onClick={(i) => handleClick(i)}
+                  />
+                </Content>
+              </Layout>
+            </Spin>
+          ) : (
+            <Layout
+              className="site-layout-background"
+              style={{ margin: "24px 0" }}
+            >
+              <Content
+                style={{ padding: "0 24px", minHeight: 280 }}
+                className="playBoard"
+              >
+                <Board
+                  squares={squares.slice()}
+                  onClick={(i) => handleClick(i)}
+                />
+              </Content>
+            </Layout>
+          )}
         </Content>
         <Modal
-          title="Basic Modal"
+          title="Room"
           visible={isModalVisible}
           onOk={handleOk}
           onCancel={handleCancel}
