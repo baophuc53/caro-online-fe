@@ -40,7 +40,7 @@ function Ranking(props) {
         console.log(error); // Xử lý lỗi
         alert(error.message);
       });
-  });
+  }, []);
 
   return (
     <>

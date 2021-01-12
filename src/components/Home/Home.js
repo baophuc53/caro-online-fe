@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Layout, Table, Menu, Card, Modal, Row, Col, Tabs } from "antd";
+import { Button, Layout, Table, Menu, Card, Modal, Row, Col, Tabs, Empty  } from "antd";
 import "./Home.scss";
 import config from "../../config/config.json";
 import NewRoomDialog from "./CreateRoom";
@@ -105,6 +105,10 @@ function Home(props) {
   };
 
   const showListWaiting = () => {
+    if (roomWaiting.length === 0)
+    {
+      return <Empty/>
+    }
     const src =
       (roomWaiting &&
         roomWaiting.map((item, key) => (
@@ -132,6 +136,10 @@ function Home(props) {
   };
 
   const showListPlaying = () => {
+    if (roomPlaying.length === 0)
+    {
+      return <Empty/>
+    }
     const src =
       (roomPlaying &&
         roomPlaying.map((item, key) => (
@@ -206,7 +214,6 @@ function Home(props) {
                 <Row gutter={16}>{showListPlaying()}</Row>
               </TabPane>
             </Tabs>
-            ,
             {/* <Row gutter={24}>
               <Col span={12}>
                 <h2 style={{ textAlign: "center", color: "red" }}>
