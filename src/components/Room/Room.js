@@ -18,11 +18,12 @@ import config from "../../config/config.json";
 
 const { Sider, Content } = Layout;
 
-function Room() {
+function Room(props) {
   const [squares, setSquares] = useState(Array(400).fill(null));
   const [turn, setTurn] = useState(true);
   const [mark, setMark] = useState("X");
   const [wait, setWait] = useState(false);
+  const [counter, setCounter] = useState(-1);
   const token = localStorage.getItem("token");
   const room = localStorage.getItem("room");
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -116,11 +117,7 @@ function Room() {
     Socket.emit("room", room);
     Socket.emit("join-room", room);
     //get data of game board
-    Axios.get(`${config.dev.path}/room/play`, { params: { room_id: room } })
-      .then((response) => {
-        if (response.data.data) setSquares(response.data.data.square);
-      })
-      .catch((err) => {});
+    fetchData();
 
     //check turn
     Axios.post(
@@ -157,14 +154,7 @@ function Room() {
     });
     //get game board again when in turn
     Socket.on("get-turn", (message) => {
-      Axios.get(`${config.dev.path}/room/play`, { params: { room_id: room } })
-        .then((response) => {
-          console.log(response.data.data);
-          if (response.data.data.square) setSquares(response.data.data.square);
-        })
-        .catch((err) => {
-          alert(err);
-        });
+      fetchData();
       if (message === "continue") {
         setTurn(true);
       } else if (message === "lose") {
@@ -176,6 +166,32 @@ function Room() {
       }
     });
   }, []);
+
+  useEffect(() => {
+    turn && counter > 0 && setTimeout(() => setCounter(counter - 1), 1000);
+    if (counter === 0) {
+      Socket.emit("end-game", "lose");
+      setTurn(false);
+      alert("You lose!");
+    }
+  }, [counter]);
+
+  const fetchData = () => {
+    Axios.get(`${config.dev.path}/room/play`, { params: { room_id: room } })
+      .then((response) => {
+        console.log(response.data);
+        if (response.data.data) {
+          setSquares(response.data.data.square);
+        }
+        if (response.data.time) {
+          setCounter(response.data.time);
+        }
+      })
+      .catch((err) => {
+        alert(err);
+      });
+  };
+
   const handleNewUserMessage = (newMessage) => {
     console.log(`New message incoming! ${newMessage}`);
     Socket.emit("room", room);

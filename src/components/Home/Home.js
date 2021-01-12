@@ -56,6 +56,10 @@ function Home(props) {
     Socket.on("invite-noti", (data) => {
       showModal(data);
     });
+    fetchData();
+  }, []);
+
+  const fetchData = () => {
     Axios.get(`${config.dev.path}/room`, {
       headers: {
         Authorization: `token ${token}`,
@@ -72,7 +76,7 @@ function Home(props) {
         console.log(err);
         alert(err.message);
       });
-  }, []);
+  }
 
   const join = (roomId) => {
     Axios.post(
@@ -95,7 +99,10 @@ function Home(props) {
       });
   };
 
-  const view = () => {};
+  const view = (roomId) => {
+    localStorage.setItem("room", roomId);
+    window.location.href="/view";
+  };
 
   const showListWaiting = () => {
     const src =

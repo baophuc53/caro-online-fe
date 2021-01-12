@@ -3,7 +3,6 @@ import { Modal, Button, Descriptions } from "antd";
 import Draggable from "react-draggable";
 import Axios from "axios";
 import config from "../../config/config.json";
-import Text from "antd/lib/typography/Text";
 
 function InfomationDialog() {
   const [statusform, setStatusForm] = useState({
@@ -111,7 +110,7 @@ function InfomationDialog() {
           <Descriptions.Item label="Achievements" />
           <Descriptions.Item label="Won">{info.won}</Descriptions.Item>
           <Descriptions.Item label="Played">{info.played}</Descriptions.Item>
-          <Descriptions.Item label="Rank">Rank</Descriptions.Item>
+          <Descriptions.Item label="Rank">{info.rank}</Descriptions.Item>
         </Descriptions>
       </Modal>
     </>
