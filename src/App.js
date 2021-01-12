@@ -20,7 +20,11 @@ import ActivateRoute from "./components/Router/ActivateRoute";
 import Activate from "./components/Register/Activate";
 import ForgotPassword from "./components/Login/ForgotPassword";
 import ForgotPasswordRoute from "./components/Router/FortPasswordRoute";
+<<<<<<< HEAD
 import Ranking from "./components/Ranking/ranking";
+=======
+import Ranking from "./components/Ranking/Ranking";
+>>>>>>> ce4de9fb3c62a8612ac1fd3570e338f00c4bfbaa
 import { Socket } from "./components/Socket/Socket";
 
 function App() {
