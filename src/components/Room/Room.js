@@ -15,6 +15,7 @@ import "react-chat-widget/lib/styles.css";
 import "./Room.scss";
 import Board from "../GameBoard/Board";
 import config from "../../config/config.json";
+import { AiOutlineClockCircle, AiOutlineFieldTime } from "react-icons/ai";
 
 const { Sider, Content } = Layout;
 
@@ -65,7 +66,9 @@ function Room(props) {
             Socket.emit("swap-turn", room);
             setTurn(false);
           } else if (_result.data.code === 1) {
-            alert("You win!");
+            Modal.success({
+              content: 'You win!',
+            });
             Socket.emit("end-game", "win");
             setTurn(false);
           }
@@ -94,7 +97,9 @@ function Room(props) {
         if (turn) {
           Socket.emit("end-game", "lose");
           setTurn(false);
-          alert("You lose!");
+          Modal.error({
+            content: 'You lose!',
+          });
         }
       }}
     >
@@ -158,10 +163,14 @@ function Room(props) {
       if (message === "continue") {
         setTurn(true);
       } else if (message === "lose") {
-        alert("You lose!");
+        Modal.error({
+          content: 'You lose!',
+        });
         setTurn(false);
       } else {
-        alert("You win!");
+        Modal.success({
+          content: 'You win!',
+        });
         setTurn(false);
       }
     });
@@ -215,10 +224,6 @@ function Room(props) {
           </Menu.Item>
         </Header>
         <Content style={{ padding: "0 50px" }}>
-          {/* <BacktoHome />
-          <GiveUp />
-<<<<<<< HEAD
-          <Invite /> */}
           {wait ? (
             <Spin tip="Waiting for other join room...">
               <Layout
@@ -241,10 +246,14 @@ function Room(props) {
               className="site-layout-background"
               style={{ margin: "24px 0" }}
             >
-              <Content
-                style={{ padding: "0 24px", minHeight: 280 }}
-                className="playBoard"
-              >
+              <Content className="playBoard">
+                <div className={"timePlay"}>
+                  {/* <div className= "timePlay"> */}
+                  <div className="time">
+                    <AiOutlineFieldTime />
+                  </div>
+                   <div className="coutdown">{turn ? counter : 0}s</div>
+                </div>
                 <Board
                   squares={squares.slice()}
                   onClick={(i) => handleClick(i)}
@@ -252,27 +261,6 @@ function Room(props) {
               </Content>
             </Layout>
           )}
-=======
-          <Invite />
-          <Content>
-            Time: <span className={turn ? "" : "hide-spin"}>{counter}</span>
-          </Content>
-          <div className={wait ? "" : "hide-spin"}>
-            <Spin />
-            Waiting for other join room...
-          </div>
-          <Layout
-            className="site-layout-background"
-            style={{ margin: "24px 0" }}
-          >
-            <Content style={{ padding: "0 24px", minHeight: 280 }}>
-              <Board
-                squares={squares.slice()}
-                onClick={(i) => handleClick(i)}
-              />
-            </Content>
-          </Layout>
->>>>>>> ce4de9fb3c62a8612ac1fd3570e338f00c4bfbaa
         </Content>
         <Modal
           title="Room"
