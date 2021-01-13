@@ -181,7 +181,9 @@ function Room(props) {
     if (counter === 0) {
       Socket.emit("end-game", "lose");
       setTurn(false);
-      alert("You lose!");
+      Modal.error({
+        content: 'You lose!',
+      });
     }
   }, [counter]);
 
