@@ -96,8 +96,8 @@ const HistoryTable = () => {
           dataSource={data}
           columns={columns}
           className="listMatches"
-          pagination={false}
         />
+        <Footer/>
       </Layout>
     </>
   );
