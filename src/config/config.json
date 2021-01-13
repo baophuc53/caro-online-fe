@@ -1,6 +1,6 @@
 {
     "dev": {
-        "path": "https://play-caroo-be.herokuapp.com"
+        "path": "http://localhost:8000"
     },
     "google_client_id": "1041588848418-6sq7a6ls0452oea110hu0lrs6ld7pblq.apps.googleusercontent.com",
     "facebook_app_id": "308060157199741"
