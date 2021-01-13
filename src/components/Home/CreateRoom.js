@@ -44,7 +44,7 @@ function NewRoomDialog() {
     console.log(isPrivate);
     Axios.post(
       `${config.dev.path}/room/new-room`,
-      { name_room: roomName, private: isPrivate, time},
+      { name_room: roomName, private: isPrivate, time },
       {
         headers: {
           Authorization: `token ${token}`,
@@ -55,27 +55,31 @@ function NewRoomDialog() {
         console.log(result);
         if (result.data.code === 0) {
           localStorage.setItem("room", result.data.data.id);
-          if (isPrivate)
-            alert("Mã tham gia phòng là: " + result.data.data.join_code);
-          Axios.post(
-            `${config.dev.path}/room/join-room`,
-            { room_id: result.data.data.id },
-            {
-              headers: {
-                Authorization: `token ${token}`,
-              },
-            }
-          )
-            .then((_result) => {
-              if (_result.data.code === 0) {
-                window.location.href = "/room";
+          if (isPrivate) {
+            Modal.success({
+              content: "Mã tham gia phòng là: " + result.data.data.join_code,
+              onOk() {
+                Axios.post(
+                  `${config.dev.path}/room/join-room`,
+                  { room_id: result.data.data.id },
+                  {
+                    headers: {
+                      Authorization: `token ${token}`,
+                    },
+                  }
+                )
+                  .then((_result) => {
+                    if (_result.data.code === 0) {
+                      window.location.href = "/room";
+                    }
+                  })
+                  .catch((_error) => {
+                    alert(_error.message);
+                  });
               }
             })
-            .catch((_error) => {
-              alert(_error.message);
-            });
-        }
-        else {
+          }
+        } else {
           alert(result.data.data.message);
         }
       })
@@ -87,7 +91,9 @@ function NewRoomDialog() {
 
   return (
     <>
-      <Button onClick={show_NewRoomDialog} type="primary">Tạo Phòng</Button>
+      <Button onClick={show_NewRoomDialog} type="primary">
+        Tạo Phòng
+      </Button>
       <Modal
         title={
           <div
@@ -129,7 +135,13 @@ function NewRoomDialog() {
           allowClear
           onChange={(e) => setRoomName(e.target.value)}
         />
-        <Checkbox onChange={(e) => {setPrivate(e.target.checked)}}>Private</Checkbox>
+        <Checkbox
+          onChange={(e) => {
+            setPrivate(e.target.checked);
+          }}
+        >
+          Private
+        </Checkbox>
         <p>Thời gian một nước:</p>
         <Input
           placeholder="Vui lòng nhập số"
