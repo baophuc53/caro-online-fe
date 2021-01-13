@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Row, Col, Table, Input, Layout, Spin, Modal } from "antd";
+import { Button, Row, Col, Menu, Input, Layout, Spin, Modal } from "antd";
 import Axios from "axios";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
@@ -15,6 +15,7 @@ import "react-chat-widget/lib/styles.css";
 import "./Room.scss";
 import Board from "../GameBoard/Board";
 import config from "../../config/config.json";
+import { AiOutlineClockCircle, AiOutlineFieldTime } from "react-icons/ai";
 
 const { Sider, Content } = Layout;
 
@@ -65,7 +66,9 @@ function Room(props) {
             Socket.emit("swap-turn", room);
             setTurn(false);
           } else if (_result.data.code === 1) {
-            alert("You win!");
+            Modal.success({
+              content: 'You win!',
+            });
             Socket.emit("end-game", "win");
             setTurn(false);
           }
@@ -88,11 +91,15 @@ function Room(props) {
 
   const GiveUp = (props) => (
     <Button
+      danger
+      type="primary"
       onClick={() => {
         if (turn) {
           Socket.emit("end-game", "lose");
           setTurn(false);
-          alert("You lose!");
+          Modal.error({
+            content: 'You lose!',
+          });
         }
       }}
     >
@@ -156,10 +163,14 @@ function Room(props) {
       if (message === "continue") {
         setTurn(true);
       } else if (message === "lose") {
-        alert("You lose!");
+        Modal.error({
+          content: 'You lose!',
+        });
         setTurn(false);
       } else {
-        alert("You win!");
+        Modal.success({
+          content: 'You win!',
+        });
         setTurn(false);
       }
     });
@@ -170,7 +181,9 @@ function Room(props) {
     if (counter === 0) {
       Socket.emit("end-game", "lose");
       setTurn(false);
-      alert("You lose!");
+      Modal.error({
+        content: 'You lose!',
+      });
     }
   }, [counter]);
 
@@ -201,32 +214,58 @@ function Room(props) {
   return (
     <div>
       <Layout className="layout-home">
-        <Header />
+        <Header>
+          <Menu.Item key="5" style={{ marginLeft: "130px" }}>
+            <BacktoHome />
+          </Menu.Item>
+          <Menu.Item key="6">
+            <Invite />
+          </Menu.Item>
+          <Menu.Item key="7">
+            <GiveUp />
+          </Menu.Item>
+        </Header>
         <Content style={{ padding: "0 50px" }}>
-          <BacktoHome />
-          <GiveUp />
-          <Invite />
-          <Content>
-            Time: <span className={turn ? "" : "hide-spin"}>{counter}</span>
-          </Content>
-          <div className={wait ? "" : "hide-spin"}>
-            <Spin />
-            Waiting for other join room...
-          </div>
-          <Layout
-            className="site-layout-background"
-            style={{ margin: "24px 0" }}
-          >
-            <Content style={{ padding: "0 24px", minHeight: 280 }}>
-              <Board
-                squares={squares.slice()}
-                onClick={(i) => handleClick(i)}
-              />
-            </Content>
-          </Layout>
+          {wait ? (
+            <Spin tip="Waiting for other join room...">
+              <Layout
+                className="site-layout-background"
+                style={{ margin: "24px 0" }}
+              >
+                <Content
+                  style={{ padding: "0 24px", minHeight: 280 }}
+                  className="playBoard"
+                >
+                  <Board
+                    squares={squares.slice()}
+                    onClick={(i) => handleClick(i)}
+                  />
+                </Content>
+              </Layout>
+            </Spin>
+          ) : (
+            <Layout
+              className="site-layout-background"
+              style={{ margin: "24px 0" }}
+            >
+              <Content className="playBoard">
+                <div className={"timePlay"}>
+                  {/* <div className= "timePlay"> */}
+                  <div className="time">
+                    <AiOutlineFieldTime />
+                  </div>
+                   <div className="coutdown">{turn ? counter : 0}s</div>
+                </div>
+                <Board
+                  squares={squares.slice()}
+                  onClick={(i) => handleClick(i)}
+                />
+              </Content>
+            </Layout>
+          )}
         </Content>
         <Modal
-          title="Basic Modal"
+          title="Room"
           visible={isModalVisible}
           onOk={handleOk}
           onCancel={handleCancel}

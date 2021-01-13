@@ -4,6 +4,7 @@ import {TrophyFilled} from '@ant-design/icons';
 import "../Home/Home.scss";
 import "./Header.scss";
 import InfoDialog from "../Infomation/Infomation";
+import { Link } from "react-router-dom";
 const { Header } = Layout;
 
 function Header_(props) {
@@ -12,6 +13,13 @@ function Header_(props) {
     <Menu>
       <Menu.Item>
         <InfoDialog />
+      </Menu.Item>
+      <Menu.Item>
+      <Link
+          to={`/history`}
+        >
+          History Matches
+        </Link>
       </Menu.Item>
       <Menu.Item>
         <Button type="text" onClick={() => Signout()}>

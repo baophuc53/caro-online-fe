@@ -20,7 +20,9 @@ import ActivateRoute from "./components/Router/ActivateRoute";
 import Activate from "./components/Register/Activate";
 import ForgotPassword from "./components/Login/ForgotPassword";
 import ForgotPasswordRoute from "./components/Router/FortPasswordRoute";
-import Ranking from "./components/Ranking/Ranking";
+import HistoryTable from "./components/HistoryTable/HistoryTable";
+import HistoryDetail from "./components/HistoryDetail/HistoryDetail";
+import Ranking from "./components/Ranking/ranking";
 import { Socket } from "./components/Socket/Socket";
 
 function App() {
@@ -65,6 +67,8 @@ function App() {
           />
           <UserRoute path="/view" component={ShowRoom}/>
           <UserRoute path="/ranking" component={Ranking}/>
+          <UserRoute path="/history/:id" component={HistoryDetail}/>
+          <UserRoute path="/history" component = {HistoryTable}/>
           <Redirect from="/" to="/home" />
         </Switch>
       </div>

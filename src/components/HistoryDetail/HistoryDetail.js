@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Layout, Menu } from "antd";
+import { Button, Layout, Menu, List } from "antd";
 import Axios from "axios";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
@@ -9,17 +9,17 @@ import {
   addLinkSnippet,
   addUserMessage,
 } from "react-chat-widget";
-import { Socket } from "../Socket/Socket";
 import avatar from "../../assets/avatar.jpg";
 import "react-chat-widget/lib/styles.css";
-import "./ShowRoom.scss";
+import "./HistoryDetail.scss";
 import Board from "../GameBoard/Board";
 import config from "../../config/config.json";
 
 const { Sider, Content } = Layout;
 
-function Room() {
+function Room(props) {
   const [squares, setSquares] = useState(Array(400).fill(null));
+  const [data, setChatData] = useState([]);
   const token = localStorage.getItem("token");
   const room = localStorage.getItem("room");
 
@@ -33,48 +33,27 @@ function Room() {
     </Button>
   );
 
-  const columns = [
-    {
-      title: "Chat",
-      dataIndex: "nickname",
-      key: "nickname",
-      render: (text) => <a>{text}</a>,
-    },
-  ];
-
   useEffect(() => {
-    Axios.get(`${config.dev.path}/room/play`, { params: { room_id: room } })
-      .then((response) => {
-        console.log(response.data);
-        if (response.data.data) {
-          setSquares(response.data.data.square);
-        }
+    Axios.get(`${config.dev.path}/user/history/${props.match.params.id}`, {
+        headers: {
+          Authorization: `token ${token}`,
+        },
       })
-      .catch((err) => {});
-    Socket.emit("room", room);
-    Socket.on("chat-message", (data) => {
-        addResponseMessage(data);
-      });
-    Socket.on("update-board", (message) => {
-        Axios.get(`${config.dev.path}/room/play`, { params: { room_id: room } })
-      .then((response) => {
-        console.log(response.data);
-        if (response.data.data) {
-          setSquares(response.data.data.square);
-        }
-      })
-      .catch((err) => {});
-      if (message === "end") alert("End game!");
-    })
+        .then((result) => {
+          if (result.data.code === 0) {
+            console.log(result.data.data);
+            if (result.data.data.history)
+                setSquares(result.data.data.history.square);
+            setChatData(result.data.data.chat);
+          } else {
+            alert(result.data.data.message);
+          }
+        })
+        .catch((error) => {
+          console.log(error); // Xử lý lỗi
+          alert(error.message);
+        });
   }, []);
-
-
-  const handleNewUserMessage = (newMessage) => {
-    console.log(`New message incoming! ${newMessage}`);
-    Socket.emit("send-chat-message", newMessage);
-    // addResponseMessage("hello!");
-    // Now send the message throught the backend API
-  };
 
   return (
     <div>
@@ -98,14 +77,6 @@ function Room() {
             </Layout>
         </Content>
         {/* <Footer /> */}
-        <Widget
-          handleNewUserMessage={handleNewUserMessage}
-          senderPlaceHolder="Type a message"
-          profileAvatar={avatar}
-          title="Chat with player"
-          subtitle=""
-        />
-        <Footer />
       </Layout>
     </div>
   );
