@@ -1,12 +1,18 @@
-.layout-home{
+.layout-home {
     height: 100vh;
-    .ant-layout-content{
-        background-color: white;
+    .ant-layout-content {
+        background-color: rgb(255, 255, 255);
+        padding: 0;
     }
-    .ant-layout-footer{
-        position: fixed;
-        bottom: 0;
-        right: 0;
+    .ant-layout-footer {
+        // position: fixed;
+        // bottom: 0;
+        // right: 0;
         width: 100%;
     }
+}
+
+.room {
+    width: 100%;
+    margin-bottom: 15px;
 }

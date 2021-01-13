@@ -1,17 +1,60 @@
 .login-form {
-  width: 400px;
-  margin: auto;
+    width: 400px;
+    margin: auto;
 }
- .login-form-forgot {
-  float: left;
-  color: red;
+
+.login-form-forgot {
+    float: left;
+    color: red;
 }
-.login-form-register{
-  float: right;
+
+.login-form-register {
+    float: right;
 }
+
 .ant-col-rtl .login-form-forgot {
-  float: left;
+    float: left;
 }
- .login-form-button {
-  width: 100%;
+
+.login-form-button {
+    width: 100%;
+}
+
+.loginOther {
+    display: flex;
+    // justify-content: space-evenly;
+    justify-content: center;
+    .btnFBGG {
+        background-color: transparent;
+        border: none;
+        box-shadow: unset;
+        margin: 0 10px;
+        outline: none;
+        &:focus {
+            border: none !important;
+        }
+        .gg {
+            font-size: xx-large;
+            color: rgb(216, 61, 61);
+            transition-duration: 0.3s;
+             :hover {
+                color: rgb(216, 105, 61);
+            }
+        }
+        .fb {
+            font-size: xx-large;
+            color: rgb(100, 79, 216);
+            transition-duration: 0.3s;
+             :hover {
+                color: rgb(45, 75, 247);
+            }
+        }
+    }
+}
+
+.ant-divider-inner-text {
+    display: inline-block;
+    padding: 0 1em;
+    font-size: 12px;
+    color: rgb(170, 169, 169);
 }

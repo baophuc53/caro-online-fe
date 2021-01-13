@@ -10,14 +10,23 @@ import {
   Redirect,
 } from "react-router-dom";
 import RegistrationForm from "./components/Register/Register";
-import UserRoute from "./components/Router/UserRoute/UserRoute";
+import UserRoute from "./components/Router/UserRoute";
+import LoginOtherRoute from "./components/Router/LoginOtherRoute";
 import Home from "./components/Home/Home";
 import Room from "./components/Room/Room";
-import {Socket} from "./components/Socket/Socket";
+import ShowRoom from "./components/ShowRoom/ShowRoom";
+import RegisterOther from "./components/Register/RegisterOther";
+import ActivateRoute from "./components/Router/ActivateRoute";
+import Activate from "./components/Register/Activate";
+import ForgotPassword from "./components/Login/ForgotPassword";
+import ForgotPasswordRoute from "./components/Router/FortPasswordRoute";
+import HistoryTable from "./components/HistoryTable/HistoryTable";
+import HistoryDetail from "./components/HistoryDetail/HistoryDetail";
+import Ranking from "./components/Ranking/ranking";
+import { Socket } from "./components/Socket/Socket";
 
 function App() {
   const [onlineUsers, setonlineUsers] = useState([]);
-
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -37,11 +46,31 @@ function App() {
           <UserRoute path="/users" />
           <Route path="/login" component={LoginScreen} />
           <Route path="/register" component={RegistrationForm} />
-          <UserRoute path="/home"> <Home ListonlineUser={onlineUsers}/> </UserRoute>
-          <UserRoute path="/room" component={Room} />
+          <ActivateRoute path="/activate-email" component={Activate} />
+          <LoginOtherRoute
+            path="/register-other"
+            component={RegisterOther}
+          />
+          <ForgotPasswordRoute
+            path="/forgot-password"
+            component={ForgotPassword}
+          />
+          <UserRoute
+            path="/home"
+            component={() => (
+              <Home ListonlineUser={onlineUsers}/>
+            )}
+          />
+          <UserRoute
+            path="/room"
+            component={Room}
+          />
+          <UserRoute path="/view" component={ShowRoom}/>
+          <UserRoute path="/ranking" component={Ranking}/>
+          <UserRoute path="/history/:id" component={HistoryDetail}/>
+          <UserRoute path="/history" component = {HistoryTable}/>
           <Redirect from="/" to="/home" />
         </Switch>
-
       </div>
     </Router>
   );

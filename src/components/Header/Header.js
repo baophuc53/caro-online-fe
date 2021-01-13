@@ -1,32 +1,60 @@
 import React from "react";
-import { Button, Layout, Menu } from "antd";
+import { Button, Layout, Menu, Dropdown } from "antd";
+import {TrophyFilled} from '@ant-design/icons';
 import "../Home/Home.scss";
-
+import "./Header.scss";
+import InfoDialog from "../Infomation/Infomation";
+import { Link } from "react-router-dom";
 const { Header } = Layout;
 
-function header() {
-  const Signout = () => (
-    <Button
-      onClick={() => {
-        localStorage.clear();
-        window.location.href = "/login";
-      }}
-    >
-      Logout
-    </Button>
+function Header_(props) {
+  const nickname = localStorage.getItem("nickname");
+  const menu = (
+    <Menu>
+      <Menu.Item>
+        <InfoDialog />
+      </Menu.Item>
+      <Menu.Item>
+      <Link
+          to={`/history`}
+        >
+          History Matches
+        </Link>
+      </Menu.Item>
+      <Menu.Item>
+        <Button type="text" onClick={() => Signout()}>
+          Sign out
+        </Button>
+      </Menu.Item>
+    </Menu>
   );
+
+  const Signout = () => {
+    localStorage.clear();
+    window.location.href = "/login";
+  };
+
+  const toRankPage = () => {
+    window.location.href = "/ranking";
+  };
 
   return (
     <Header className="header">
       <div className="logo" />
-      <Menu theme="dark" mode="horizontal" defaultSelectedKeys={["2"]}>
-        <Menu.Item key="1">nav 1</Menu.Item>
-        <Menu.Item key="2">nav 2</Menu.Item>
-        <Menu.Item key="3">nav 3</Menu.Item>
-        <Menu.Item key="4" style={{float: 'right'}}><Signout/></Menu.Item>
+      
+      <Menu theme="dark" mode="horizontal" defaultSelectedKeys={["1"]}>
+      <Menu.Item key="1" onClick={() => toRankPage()}>
+        <TrophyFilled style={{ fontSize: "30px", color: "yellow" }} />
+      </Menu.Item>
+        <Menu.Item key="4" style={{ float: "right" }}>
+          <Dropdown overlay={menu} placement="bottomCenter">
+            <Button>{nickname}</Button>
+          </Dropdown>
+        </Menu.Item>
+        {props.children}
       </Menu>
     </Header>
   );
 }
 
-export default header;
+export default Header_;
