@@ -10,7 +10,7 @@ function NewRoomDialog() {
     disabled: true,
   });
   const [isPrivate, setPrivate] = useState(false);
-  const [time, setTime] = useState(0);
+  const [time, setTime] = useState(20);
   const [roomName, setRoomName] = useState("");
 
   const show_NewRoomDialog = () => {
@@ -41,7 +41,7 @@ function NewRoomDialog() {
 
   const handle_AddNewRoom = () => {
     const token = localStorage.getItem("token");
-    console.log(isPrivate);
+    if (!roomName && !time) return;
     Axios.post(
       `${config.dev.path}/room/new-room`,
       { name_room: roomName, private: isPrivate, time },
@@ -76,8 +76,26 @@ function NewRoomDialog() {
                   .catch((_error) => {
                     alert(_error.message);
                   });
+              },
+            });
+          } else {
+            Axios.post(
+              `${config.dev.path}/room/join-room`,
+              { room_id: result.data.data.id },
+              {
+                headers: {
+                  Authorization: `token ${token}`,
+                },
               }
-            })
+            )
+              .then((_result) => {
+                if (_result.data.code === 0) {
+                  window.location.href = "/room";
+                }
+              })
+              .catch((_error) => {
+                alert(_error.message);
+              });
           }
         } else {
           alert(result.data.data.message);
@@ -147,6 +165,7 @@ function NewRoomDialog() {
           placeholder="Vui lòng nhập số"
           allowClear
           type="number"
+          defaultValue="20"
           onChange={(e) => setTime(parseInt(e.target.value))}
         />
       </Modal>

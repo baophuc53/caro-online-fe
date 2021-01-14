@@ -29,7 +29,7 @@ function Room(props) {
   const room = localStorage.getItem("room");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [inviteName, setInviteName] = useState("");
-
+  let time;
   const showModal = () => {
     setIsModalVisible(true);
   };
@@ -123,7 +123,6 @@ function Room(props) {
     Socket.emit("join-room", room);
     //get data of game board
     fetchData();
-
     //check turn
     Axios.post(
       `${config.dev.path}/room/turn`,
@@ -143,7 +142,10 @@ function Room(props) {
           setTurn(false);
           Socket.on("end-waiting", (message) => {
             setWait(false);
-            if (_result.data.goFirst) setTurn(true);
+            if (_result.data.goFirst) {
+              setTurn(true);
+              setCounter(time);
+            }
           });
         } else setTurn(false);
       })
@@ -190,12 +192,12 @@ function Room(props) {
   const fetchData = () => {
     Axios.get(`${config.dev.path}/room/play`, { params: { room_id: room } })
       .then((response) => {
-        console.log(response.data);
         if (response.data.data) {
           setSquares(response.data.data.square);
         }
         if (response.data.time) {
           setCounter(response.data.time);
+          time = response.data.time;
         }
       })
       .catch((err) => {
