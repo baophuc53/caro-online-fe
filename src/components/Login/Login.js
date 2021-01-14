@@ -44,7 +44,7 @@ const NormalLoginForm = () => {
               alert("Không thể gửi mã xác thực tới email của bạn !");
             }
           });
-        } else alert(res.data.message);
+        } else alert(res.data.data.message);
       })
       .catch((err) => {
         console.log(err);
